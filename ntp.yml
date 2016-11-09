@@ -1,0 +1,4 @@
+  - name: Configure NTP server
+    copy: src=/root/ansible/forif/roles/common/templates/ntp.conf.j2 dest=/etc/ntp.conf
+    notify:
+    - restart ntpd
