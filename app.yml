@@ -1,0 +1,53 @@
+- hosts: webservers
+#  vars: 
+#  var1: mariadb
+  tasks:
+#  - name: ensure mariadb installed
+#    yum: pkg={{item}} state=installed
+#    with_items:
+#     - mariadb-server
+#     - python
+#     -  MySQL-python
+#
+  - name: ensure mysql python
+    yum: pkg=MySQL-python state=installed
+#
+  - name:  Start Mysql Service
+    service: name=mariadb state=started enabled=true
+  - name: Create a new database
+    mysql_db: name=demo state=present collation=utf8_general_ci
+
+  - name:  DELETE a TEST database
+    action: mysql_db db=test state=present
+
+  - name: Create DB user
+    mysql_user: name=bob password=12345 priv=*.*:ALL,GRANT state=present
+#  - name: DB 
+#    yum: pkg=mariadb-server state=installed
+  - name: write the file
+    template: src=/srv/mysql dest=/etc/my.cnf
+#
+   
+    notify:
+    - restart mariadb
+#  handlers: 
+#  - name:
+#    service: name=mariadb state=restart
+  - name: apache installed 
+    yum: pkg=httpd state=installed
+#  - name: enabled mod_rewrite
+#    http_module: name=mod_rewrite state=present
+#  - name: enabled mod_deflate
+#    http_module: state=absent  name=mod_deflate
+  - command: /usr/sbin/iptables -F
+#  - name: apache2 listen on port 443
+#    lineinfile: dest=/etc/httpd/conf/httpd.conf  regexp="^Listen 80" line="Listen 443" state=present
+    notify:
+    - restart httpd
+#  - name:
+#    service: name=httpd state=reload
+  handlers:
+  - name: restart httpd
+    service: name=httpd state=restarted
+  - name: restart mariadb
+    service: name=mariadb state=restarted             
