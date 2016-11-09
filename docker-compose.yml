@@ -1,0 +1,23 @@
+{
+  "Services": {
+    "app": {
+      "Image": "emmetog/page-hit-counter@sha256:d1264d35545b05fa704902be42ca7ff0ff7b731889a834fbfafc34dde9b8d7cb", 
+      "Networks": [
+        "my-net"
+      ], 
+      "Ports": [
+        {
+          "Port": 5000, 
+          "Protocol": "tcp"
+        }
+      ]
+    }, 
+    "redis": {
+      "Image": "redis@sha256:f8829e00d95672c48c60f468329d6693c4bdd28d1f057e755f8ba8b40008682e", 
+      "Networks": [
+        "my-net"
+      ]
+    }
+  }, 
+  "Version": "0.1"
+}
