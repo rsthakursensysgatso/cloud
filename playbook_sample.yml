@@ -1,0 +1,30 @@
+# target hostname or group name
+- hosts: target_servers
+#:- hosts: ansible
+# define tasks
+  tasks:
+# task name (any name you like)
+  - name: Test Task
+# use file module to set the file state
+    file: path=/home/cent/test.conf state=touch owner=cent group=cent mode=0600
+  - name: error message handing
+#    file:  path=/tmp/dir state=directory mode=0755
+    command:  /usr/bin/mkdir /tmp/dir/thakur
+    register: result
+    ignore_errors: True
+
+  - name:  Debugging started
+    command: mkdir -p /tmp/dir/thakur
+#    comamnd: echo "result"
+#    fail: msg="Command failed Sorrrryyyyyyyyyyyyyyyyy is possible"
+    when: "'No such file' in result.stderr"
+  
+#  - name: Second debug
+#    debug: 
+#     msg:  "{{ result.stderr }}"
+  - name: put shell var into ansible var
+    command: echo Ravi
+    register: my_var
+
+  - debug: var=my_var
+

@@ -1,0 +1,17 @@
+resource "aws_route53_zone" "blakesmith_me" {
+  provider = "aws.prod"
+  name = "blakesmith.me"
+}
+
+resource "aws_route53_record" "origin" {
+  provider = "aws.prod"
+  zone_id = "${aws_route53_zone.blakesmith_me.zone_id}"
+  name = "origin.blakesmith.me"
+  type = "A"
+
+  alias {
+    name = "${aws_s3_bucket.origin_blakesmith_me.website_domain}"
+    zone_id = "${aws_s3_bucket.origin_blakesmith_me.hosted_zone_id}"
+    evaluate_target_health = false
+  }
+}

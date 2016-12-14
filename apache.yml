@@ -1,0 +1,99 @@
+- hosts: target_servers
+# use priviledge (default : root)
+  become: yes
+   # the way to use priviledge
+  become_method: sudo
+#     # define tasks
+  vars:
+   check: "Are You Looking For the Chef Server"      
+   port: 443
+  tasks:
+  - name: Install php
+    yum:  pkg={{item}} state=installed
+    with_items: 
+     - php
+     - php-mysql
+     - httpd
+#  - name: httpd is installed
+#    yum: name=httpd state=installed
+  
+#  - name: httpd is running and enabled
+#    service: name=httpd state=started
+
+
+  - name: Download web page
+#    command: wget http://google.com 
+    #get_url:  
+    # url: http://www.sheldonbrown.com/web_sample1.html
+    # dest: /var/www/html/index.html
+    command: systemctl status httpd 
+    register: result
+    ignore_errors: True
+#     when: result|failed 
+
+  - name: Start apache result not running above check prove it with condition
+    command: systemctl start httpd
+    when: result|failed
+    
+  - name: acti
+    file:  dest=/var/www/html/index.html  state=touch
+    when:  '"active" in result.stdout'
+#    when:  '"failed" in not result.stderr'
+  - name: Error handling
+#    debug: msg="The error output os {{result}}"
+    debug: msg= "The error output os {{result}}"
+  - name: the result value of rc & create 
+#    command: mkdir /var/www/test ## OR
+    file: path=/var/www/test state=directory
+    when:   "result.rc == 0"
+
+  - name: Apache port check
+    shell: curl  --silent -k https://localhost |grep "Are You Looking For the Chef Server"
+#    uri: curl  --silent -k https://localhost
+    register: result
+    
+  - name: Do action based on web page output
+    command: systemctl start httpd
+    when:   result.stdout.find("Are You Looking For the Chef Server") != -1
+#    register: value 
+
+  - name: Apache port check
+#    shell: curl  --silent -k https://localhost |grep "Are You Looking For the Chef Server"
+    shell: curl  --silent -k https://localhost 
+    register: value
+
+
+  - name: what happened afte restarting the apache
+    #shell:  echo "WOrking YYYYYYAAAAAAAAHOOOOOOOOOO   KEEPING CONTINUE TO NEXT USING IGNORE "
+    fail: msg="Aborted because condition is correct TESTTTTTTTTTTTT"
+    when: value.rc == 0
+#    when: value.stdout.find("Are You Looking For the Chef Server") == 1
+    ignore_errors: True
+   
+
+  - name:  second check
+    shell:  echo "WOrking YYYYYYAAAAAAAAHOOOOOOOOOO"
+#########  WHEN Chef is comes in the value output then the below statement become true echo #####    
+    when: value.stdout.find("Chef") != -1
+    register: what
+    ignore_errors: True
+
+#  - name: Checking
+#    debug: msg={{value}}
+#  - name: Value of check
+#    debug: msg={{what}}
+  - name:  Last check string check
+    command: echo "Done for string check"
+    when: '"WOrking" in what.stdout'
+    ignore_errors: True
+  
+  - name: port check
+    shell:   netstat -ntpl |grep {{port}}
+    register: port_stat
+  - name: Checking port sir
+    shell: echo "LIstening"
+    when:  '"80"  in port_stat.stdout'
+#    when:  '"80" not in port_stat.stdout'
+  - name: port check
+    shell: echo "This is correct port" 
+    when: '"{{port}}" in port_stat.stdout'

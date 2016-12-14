@@ -1,0 +1,46 @@
+- hosts: webservers
+  vars:
+   wp_version: 4.2.4 
+  tasks:
+   #- name: Download WordPress
+     #get_url: url=https://wordpress.org/wordpress-{{ wp_version }}.tar.gz dest=/srv/wordpress-{{ wp_version }}.tar.gz
+    # get_url: url=https://wordpress.org/wordpress-4.2.4.tar.gz
+   #- notify:
+   #  - copying 
+   #- name: move the wordpress file
+   #  copy: src=/root/ansible/wordpress/wordpress-4.2.4.tar.gz  dest=/srv/wordpress-4.2.4.tar.gz
+   - name: script move
+     script:  /root/ansible/wordpress/test.sh
+   - name: Extract archive
+     command:  tar xvzf /srv/wordpress-4.2.4.tar.gz -C /srv
+#     command: chdir=/srv/  
+   - name: Install php-fpm 
+     yum: pkg=php-fpm state=installed
+#     command: gunzip wordpress-4.2.4.tar.gz
+
+   - name: Add group "wordpress"
+     group: name=wordpress
+
+   - name: Add user "wordpress"
+     user: name=wordpress group=wordpress home=/srv/wordpress/
+
+#  - name: Fetch random salts for WordPress config
+#    local_action: command curl https://api.wordpress.org/secret-key/1.1/salt/
+#    register: "wp_salt"
+#    become: no
+#    become_method: sudo 
+
+   - name: Create WordPress database
+     mysql_db: name=wordpress state=present
+
+   - name: Create WordPress database user
+     mysql_user: name=wordpress password=wordpress priv=wordpress.*:ALL host='localhost' state=present
+
+#   - name: Copy WordPress config file
+#     template: src=wp-config.php dest=/srv/wordpress/
+
+#   - name: Change ownership of WordPress installation
+#     file: path=/srv/wordpress/ owner=wordpress group=wordpress state=directory recurse=yes
+
+   - name: Start php-fpm Service
+     service: name=php-fpm state=started enabled=yes

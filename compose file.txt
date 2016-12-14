@@ -1,0 +1,23 @@
+[root@node1 compose8(keystone_admin)]# cat docker-compose.yml
+weba:
+#  image: 'dockercloud/hello-world:latest'
+  build: ./web
+#  target_num_containers: 2
+webb:
+  build: ./web1
+webc:
+  build: ./web2
+
+lb:
+  image: 'dockercloud/haproxy:latest'
+  links:
+    - weba
+    - webb
+    - webc
+  ports:
+    - '8880:80'
+#  roles:
+#    - global
+[root@node1 compose8(keystone_admin)]# ls
+docker-compose.yml  web  web1  web2
+[root@node1 compose8(keystone_admin)]#
