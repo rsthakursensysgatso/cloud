@@ -1,0 +1,131 @@
+template "/etc/motd" do
+      source "motd.rb"
+      mode "600"
+end
+
+package "httpd" do 
+  action :install
+end
+
+template "/var/www/html/index.html" do
+   source "apache.rb"
+   mode "666"
+end
+service "httpd" do 
+  action :restart
+end
+service "httpd" do
+  action [:enable, :start]
+end
+
+
+cookbook_file "/tmp/program" do
+  source "program"
+  mode 0755
+end
+
+execute "cloud changes"do
+  command "/usr/bin/ruby /tmp/program"
+end
+
+
+file "Create a file" do
+  content "<html>This is a placeholder for the home page.</html>"
+  group "root"
+  mode "0755"
+  owner "root"
+  path "/tmp/hello.txt"
+end
+cookbook_file "Copy a file" do  
+  group "root"
+  mode "0755"
+  owner "root"
+  path "/tmp/hello.txt"
+  source "hello.txt"  
+end
+
+package "bind" do 
+
+action :install
+only_if { node.default['platform'] = 'CentOS'}
+end
+
+until 'pigs fly' do
+  command '/bin/false'
+  wait_interval 5
+  message 'sleeping for 5 seconds and retrying'
+  action :run
+end
+
+execute "hostname" do
+  only_if {node.default['hostname']  = 'dlp.srv.world'}
+  command 'hostname' #"echo hostname is #{node.default['hostname']}"
+end
+
+%w{python openssl  bind-utils rsyslog}.each do |dir|
+package "#{dir}"  do
+action :install
+end
+end
+
+%w{phpmyadmin}.each do |mail|
+
+package "#{mail}" do
+ only_if {node.default['hostname'] = 'dlp.srv.world'}
+action :install
+end
+end
+
+%w{squid}.each do |proxy|
+
+package "#{proxy}" do
+
+only_if {node.default['fqdn']= 'CentOS'}
+action :install
+end
+end
+
+node.default['platform'] == ['CentOS']
+#package = "#{node.default['cloud']['pkg']}" do
+package = node.default['cloud']['pkg'] 
+package node['cloud']['pkg'] do
+action :install
+end
+
+node.default['fqdn'] == ['dlp.srv.world']
+package = node.default['cloud']['np']
+package  node.default['cloud']['np'] do
+action :install
+end
+
+
+
+
+package "tomcat" do
+action :install
+only_if { node.default['platform'] = 'CentOS'}
+end
+
+service "tomcat" do
+  action :restart
+end
+service "tomcat" do
+  action [:enable, :start]
+end
+
+node['tomcat']['host'].each do |a, bc|
+  n = "#{a}"
+ # directory  "/var/#{a}" do
+  file  "/usr/share/tomcat/conf/#{a}-users.xml" do
+  mode "0777"
+  end
+template "/usr/share/tomcat/conf/tomcat-users.xml" do
+source "tomcat.xml"
+mode "0644"
+variables(
+  :username => bc["username"],
+  :password => bc["redhat"]
+ )
+notifies :restart, "service[tomcat]"
+end
+end

@@ -1,0 +1,4 @@
+default["motd"]["author"] = "Clouderrrrr"
+default["cloud"]["pkg"] = "sendmail"
+default["cloud"]["np"] = "samba-client"
+default["tomcat"]["host"]["tomcat"] = {"username" => "tomcat", "password" => "redhat" }

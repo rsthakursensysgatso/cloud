@@ -1,0 +1,11 @@
+#!/usr/bin/ruby
+#file_names = ['foo.txt', 'bar.txt']
+file_names = ['/tmp/foo.txt', '/tmp/bar.txt']
+
+file_names.each do |file_name|
+  text = File.read(file_name)
+  new_contents = text.gsub(/Devops/, "cloud")
+   puts new_contents
+  File.open(file_name, "w") {|file| file.puts new_contents }
+end
+
