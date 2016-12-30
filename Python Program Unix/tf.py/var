@@ -1,0 +1,24 @@
+
+variable "tag_name" {
+}
+
+variable "tag_description" {
+}
+
+variable "tag_environment" {
+}
+
+variable "tag_creator" {
+}
+
+variable "tag_customer" {
+}
+
+variable "tag_owner" {
+}
+
+variable "tag_product" {
+}
+
+variable "tag_costcenter" {
+}
