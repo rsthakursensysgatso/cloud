@@ -1,0 +1,19 @@
+   - name: Install NTP server
+     yum: state=installed name=ntp
+   
+
+   - name: Set the correct timezone.
+     file:
+      src: /usr/share/zoneinfo/UTC
+      dest: /etc/localtime
+      state: link
+      force: yes
+
+   - name: Start NTP Service
+     service: name=ntpd state=started
+
+
+   - name: Configure NTP server
+     copy: src=/root/vagrant/myapp/private/ansible/finalapp/ntp/files/ntp.conf dest=/etc/ntp.conf
+     notify:
+     - restart ntpd

@@ -1,0 +1,9 @@
+*filter
+:INPUT ACCEPT [9:672]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [7:1124]
+
+-A INPUT -p tcp  -m tcp --dport 5000 -j  ACCEPT
+-A INPUT -p tcp  -m tcp --dport 8088 -j  ACCEPT
+
+COMMIT
