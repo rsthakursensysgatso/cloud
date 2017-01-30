@@ -1,0 +1,35 @@
+resource "aws_cloudwatch_log_group" "yada" {
+  name = "Yada"
+
+#  tags {
+#    Name = "production"
+#    Environment = "production"
+#    Application = "serviceA"
+#  }
+}
+
+
+
+resource "aws_cloudwatch_log_metric_filter" "yada" {
+  name = "MyAppAccessCount"
+  pattern = ""
+  log_group_name = "${aws_cloudwatch_log_group.dada.name}"
+
+  metric_transformation {
+    name = "EventCount"
+    namespace = "YourNamespace"
+    value = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_group" "dada" {
+    name = "MyApp/access.log"
+}
+
+
+resource "aws_cloudwatch_log_stream" "foo" {
+  name           = "SampleLogStream1234"
+  log_group_name = "${aws_cloudwatch_log_group.yada.name}"
+}
+
+
