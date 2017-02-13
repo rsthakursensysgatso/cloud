@@ -1,0 +1,17 @@
+---
+
+iptables_enabled: yes                   
+iptables_logging: yes                   
+
+iptables_flush_all: yes                 
+iptables_deny_all : yes                
+
+iptables_confdir: /etc/iptables
+iptables_rules_path: "{{ iptables_confdir }}/rules.v4" 
+
+iptables_load_path: /etc/network/if-up.d/iptables_load 
+
+iptables_allowed_tcp_ports: [22, 3306] 
+iptables_forwarded_tcp_ports: []        
+                                        
+iptables_raw_rules: []                  

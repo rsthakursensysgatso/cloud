@@ -1,0 +1,15 @@
+---
+
+   - include_vars: myvars.yml
+
+   - name: Change Password
+     shell: mysqladmin -u root -p'{{rpass}}' password ''
+
+   - name: Create the whois database table with domain detail
+     command: python start.py
+     args:
+       chdir: "{{dir}}"
+     ignore_errors: True
+
+   - name: Change Password
+     shell: mysqladmin -u root password "{{rpass}}"

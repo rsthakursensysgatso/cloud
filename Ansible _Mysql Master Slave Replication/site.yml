@@ -1,0 +1,18 @@
+- hosts: master
+  become: yes
+  roles:
+  - setup
+  - common
+  - master
+
+- hosts: slave
+  become: yes
+  roles:
+  - setup
+  - common
+  - slave
+
+- hosts: master
+  become: yes
+  roles:
+  - mdump

@@ -1,0 +1,110 @@
+---
+   - include_vars: myvars.yml
+  
+
+   - name: Update Packages
+     yum: name=*
+          state=latest
+          update_cache=yes
+     when: ansible_os_family == "RedHat"
+
+   - name: install the Centos repo rpm
+     yum:
+       name: epel-release
+       state: present
+     when: ansible_os_family == "RedHat"
+
+   - name: Install Required Packages
+     yum: state=present name={{ item }}
+     with_items:
+      - python
+      - supervisor
+      - iptables-services
+      - net-tools
+     when: ansible_os_family == "RedHat"
+  
+
+   - name: Install mariadb database
+     yum: state=present name={{ item }}
+     with_items:
+      - mariadb-server
+      - mariadb
+      - MySQL-python
+
+   - name: Start Mariadb
+     service: name=mariadb state=started enabled=yes
+
+
+
+   - name: Copy Supervisor script
+     copy:
+       src: supervisord.conf
+       dest: /etc/supervisord.conf
+       owner: root
+       group: root
+       mode: '0644'
+       backup: yes
+     notify:
+        - restart supervisord
+
+   - name: Start Supervisor
+     service: name=supervisord state=started enabled=yes
+
+
+   - name: create the WHOIS database
+     mysql_db: db=whois
+            state=present
+ 
+   - name: Create whois User
+     mysql_user:
+      name: whois
+      password: password
+      priv: '*.*:ALL,GRANT'
+      state: present
+
+   - name: Create directory
+     file: path=/root/whois state=directory
+
+
+   - name: Copy Database script
+     copy:
+      src: start.py
+      dest:  "{{ dir }}"
+      owner: root
+      group: root
+      mode: '0755'
+
+
+   - name: Create the whois database table with domain detail
+     command: python start.py
+     args:
+       chdir: "{{ dir  }}"
+     ignore_errors: True
+
+
+   - name: iptables is running and enabled
+     service: name=iptables state=started enabled=yes
+
+
+   - name: Check Mariadb Service
+     command: systemctl status mariadb
+     register: result
+     ignore_errors: True
+
+   - name: Error handling
+     debug: msg={{ result.stdout }}
+        
+
+
+   ########## TESTING OF Mysql #############
+   - wait_for:
+       port: 3306
+       delay: 10
+
+   - name: port status
+     shell: netstat -ntpl |grep 3306
+     register: port_stat
+
+   - name: Database Port Check
+     shell: echo "App Listening on 5000"
+     when: '"3306"  in port_stat.stdout'

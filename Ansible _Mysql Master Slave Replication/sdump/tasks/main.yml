@@ -1,0 +1,17 @@
+---
+
+#   - name: create the WHOIS database
+#     mysql_db: name=whois state=present login_user='root' login_password='password'
+
+#   - name: Change Password
+#     shell: mysqladmin -u root -p'password' password ''
+
+#   - name: Create the whois database table 
+#     command: python table.py
+#     args:
+#       chdir: /root/whois
+#     ignore_errors: True
+
+#   - name: Change Password
+#     shell: mysqladmin -u root password password
+
