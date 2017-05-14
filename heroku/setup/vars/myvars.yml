@@ -1,0 +1,3 @@
+curr: "ruby '2.2.1'"
+fin:  "ruby '2.0.0'"
+dir:  /var/heroku
