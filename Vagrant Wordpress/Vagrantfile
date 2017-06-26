@@ -1,0 +1,32 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.provider :virtualbox do |v|
+  v.memory = 1024
+  v.cpus = 1
+end
+
+######## Database #####
+
+  config.vm.define "db" do |db|
+  db.vm.hostname = "db"
+  db.vm.network :private_network, ip: "192.168.2.6"
+end
+
+####### wordpress #####
+
+  config.vm.define "wordpress" do |wordpress|
+  wordpress.vm.hostname = "wordpress"
+  wordpress.vm.network "forwarded_port", guest: 80, host: 8082
+  wordpress.vm.synced_folder "pkg/", "/var/tmp/wordpress",
+  owner: "root", group: "root"
+  wordpress.vm.network :private_network, ip: "192.168.2.5"
+end
+
+
+   config.vm.provision :shell, path: "Vagrant.bootstrap.sh"
+   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+   config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "main/site.yml"
+    ansible.vault_password_file = "vault_pass"
+end
+end
