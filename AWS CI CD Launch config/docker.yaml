@@ -1,0 +1,52 @@
+---
+- hosts: tomcatservers
+  sudo: yes
+
+  vars:
+    app_version: release-0.05
+    commit: ${GIT_COMMIT}
+
+  tasks:
+  - name: Install EPEL repo
+    yum: name=epel-release state=present
+  
+  - name: Git commit version
+    shell: git log -n 1 master |head -1|awk '{print $2}'
+    register: commit_version
+    
+  - command: echo "{{commit_version.stdout}}"
+   
+  - command: echo "{{ lookup('env','PATH') }}"
+    register: default_path
+  - command: echo "{{ lookup('env','WORKSPACE') }}"
+    register: jenkins_job_workspace
+  - command: echo "{{ lookup('env', 'BUILD_ID')}}"
+    register: build_id
+    
+  
+ 
+    
+  - name: Remove old files foo
+    file: path=/var/docker/ state=absent
+    ignore_errors: true
+   
+
+
+
+  - name: deploy website content
+    git: repo=https://github.com/rsthakur83/release.git
+         dest=/var/docker/
+         version={{ app_version }}
+         force=yes
+
+
+  - name: Copying Docker file
+    copy: src=Dockerfile dest=/var/docker/
+
+
+  - name: Build docker image
+    command: docker build -t webapp:"{{ lookup('env', 'BUILD_ID')}}" /var/docker/
+
+  - name: Run the build
+    #command: docker run -tid -p 9000:80 webapp:"{{ lookup('env', 'BUILD_ID')}}"
+    command: docker run -tid -p 9"{{ lookup('env', 'BUILD_ID')}}":80 webapp:"{{ lookup('env', 'BUILD_ID')}}"
