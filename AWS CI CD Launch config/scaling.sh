@@ -17,31 +17,21 @@ if [ "$asg1" == "$lcfg1" ]
 then
 rm -rf $fis/terraform.*;cp userdata.sh $fis;cd $fis;sudo terraform plan;sudo terraform apply
 sleep 120
-#sudo aws autoscaling update-auto-scaling-group --auto-scaling-group-name machine-factory-v1 --launch-configuration-name $lcfg2  --min-size 3 --max-size 4 --vpc-zone-identifier $sub1
-#sudo aws autoscaling update-auto-scaling-group --auto-scaling-group-name machine-factory-v1 --launch-configuration-name $lcfg2  --min-size 3 --max-size 4 --vpc-zone-identifier $sub2
-### TEST
 
-#sudo aws autoscaling update-auto-scaling-group --auto-scaling-group-name machine-factory-v1 --launch-configuration-name $lcfg2
 sudo aws autoscaling update-auto-scaling-group --auto-scaling-group-name machine-factory-v1 --launch-configuration-name $lcfg2 --min-size 4 --max-size 5
-##################
 
 sleep 120
 sudo aws autoscaling delete-launch-configuration --launch-configuration-name $lcfg1
-## Test ##
-#sleep 60
+
 sudo aws autoscaling update-auto-scaling-group --auto-scaling-group-name machine-factory-v1 --launch-configuration-name $lcfg2 --min-size 2 --max-size 2
 else
  rm -rf $fis/terraform.*;cp userdata.sh $sec;cd $sec;sudo terraform plan;sudo terraform apply
  sleep 120
-#sudo aws autoscaling update-auto-scaling-group --auto-scaling-group-name machine-factory-v1 --launch-configuration-name $lcfg1  --min-size 3 --max-size 4 --vpc-zone-identifier $sub1
-#sudo aws autoscaling update-auto-scaling-group --auto-scaling-group-name machine-factory-v1 --launch-configuration-name $lcfg1  --min-size 3 --max-size 4 --vpc-zone-identifier $sub2
-###### TEST #####
-#sudo aws autoscaling update-auto-scaling-group --auto-scaling-group-name machine-factory-v1 --launch-configuration-name $lcfg1
+
 sudo aws autoscaling update-auto-scaling-group --auto-scaling-group-name machine-factory-v1 --launch-configuration-name $lcfg1 --min-size 4 --max-size 5
-##########
+
 sleep 120
 sudo aws autoscaling delete-launch-configuration --launch-configuration-name $lcfg2
-## Test ##
-#sleep 60
+
 sudo aws autoscaling update-auto-scaling-group --auto-scaling-group-name machine-factory-v1 --launch-configuration-name $lcfg1 --min-size 2 --max-size 2
 fi
