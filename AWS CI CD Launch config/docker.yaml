@@ -3,7 +3,7 @@
   sudo: yes
 
   vars:
-    app_version: release-0.05
+    app_version: release-0.03
     commit: ${GIT_COMMIT}
 
   tasks:
