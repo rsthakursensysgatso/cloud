@@ -1,0 +1,15 @@
+{
+  "servicv": {
+    "name": "apache",
+    "tags": ["web-client"],
+    "address": "192.168.67.1",
+    "port": 80,
+    "enableTagOverride": false,
+    "checks": [
+      {
+        "tcp": "localhost:80",
+        "interval": "10s"
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+server {
+  listen 80 default_server;
+  location / {
+    proxy_pass http://frontend;
+  }
+}
+ 
+upstream frontend { {{range service "apache"}}
+  server {{.Address}};{{end}}
+}
