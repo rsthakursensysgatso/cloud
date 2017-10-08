@@ -1,0 +1,107 @@
+---
+   - include_vars: myvars.yml
+  
+
+   - name: Epel Release
+     yum: name=epel-release state=present
+
+   - name: Install Other Tools
+     yum: state=present name={{ item }}
+     with_items:
+      - screen
+      - vim
+      - htop
+      - git
+      - atop
+      - unbound
+      - monit
+      - bind
+      - bind-utils
+      - iptables-services
+
+
+############## NTP ###############
+   - name: Creates ntp directory
+     file: path=/var/run/ntp state=directory
+
+
+   - name: Install NTP
+     yum: name=ntp state=present update_cache=yes
+  
+   - name: Copy over the NTP configuration
+     template: src=ntp.conf.j2 dest=/etc/ntp.conf mode=644 owner=root group=root
+     notify:
+       - restart ntp
+    
+   - name: Make sure NTP is started up
+     service: name=ntpd state=started enabled=yes
+
+############ DNS ############
+   - name: Install DNS
+     yum: state=present name={{ item }}
+     with_items:
+      - bind
+      - bind-utils
+
+   - name: Copy DNS config
+     template: src={{ item.src }} dest={{ item.dest }}
+     with_items:
+       - { src: '1.168.192.db.j2', dest: '/var/named/1.168.192.db' }
+       - { src: 'dathena.io.local.db.j2', dest: '/var/named/dathena.io.local.db' }
+       - { src: 'named.conf.j2', dest: '/etc/named.conf' }
+       - { src: 'resolv.conf.j2', dest: '/etc/resolv.conf' }
+     notify:
+       - restart named
+
+   - name: Make sure Named is started up
+     service: name=named state=started enabled=yes
+
+
+   - name:  Time service 
+     copy: src={{ item.src }} dest={{ item.dest }}
+     with_items: 
+       - { src: 'time.service',  dest: '/etc/systemd/system/multi-user.target.wants/' }
+       - { src: 'time.sh',  dest: '/usr/sbin/' }
+
+   - name: Change permission
+     file: 
+        path: /usr/sbin/time.sh
+        mode: 755
+   
+   - name: Reload daemon 
+     command:  systemctl daemon-reload
+
+   - name: Start Time service
+     service: name=time state=started 
+
+   - name: Start Unbound service
+     service: name=unbound state=started
+
+   - name: Copy Unbound Config
+     template: src={{ item.src }} dest={{ item.dest }}
+     with_items:
+       - { src: 'unbound.conf.j2',  dest: '/etc/unbound/unbound.conf' }
+     notify:
+       -  restart unbound
+
+
+   - name: Start Monit 
+     service: name=monit state=started enabled=yes
+
+   - name: Copy Monit Config  
+     template: src={{ item.src }} dest={{ item.dest }}
+     with_items:
+       - { src: 'unbound.j2',  dest: '/etc/monit.d/unbound' }
+       - { src: 'monitrc.j2',  dest: '/etc/monitrc' }
+       - { src: 'ntpmon.j2',  dest: '/etc/monit.d/ntpmon' }
+       - { src: 'timemon.j2',  dest: '/etc/monit.d/timemon' }
+     notify: 
+       -  restart monit
+
+   - name: Iptables Service install
+     service: name=iptables state=started enabled=yes
+
+   - name: insert iptables template
+     template: src=iptables.j2 dest=/etc/sysconfig/iptables
+     notify: 
+       -  restart iptables

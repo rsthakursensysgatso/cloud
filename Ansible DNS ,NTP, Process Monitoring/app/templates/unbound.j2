@@ -1,0 +1,4 @@
+check process unbound with pidfile /var/run/unbound/unbound.pid
+start program = "/usr/bin/systemctl   start unbound"
+stop program =  "/usr/bin/systemctl stop unbound"
+#if failed port 8081 protocol unbound then restart

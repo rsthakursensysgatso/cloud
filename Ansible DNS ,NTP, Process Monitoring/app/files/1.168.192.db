@@ -1,0 +1,15 @@
+$TTL 86400
+@   IN  SOA     primary.itzgeek.local. root.itzgeek.local. (
+2014112511  ;Serial
+3600        ;Refresh
+1800        ;Retry
+604800      ;Expire
+86400       ;Minimum TTL
+)
+;Name Server Information
+@ IN  NS      primary.itzgeek.local.
+;Reverse lookup for Name Server
+8        IN  PTR     primary.itzgeek.local.
+;PTR Record IP address to HostName
+11      IN  PTR     one.dathena.io.
+12      IN  PTR     two.dathena.io.

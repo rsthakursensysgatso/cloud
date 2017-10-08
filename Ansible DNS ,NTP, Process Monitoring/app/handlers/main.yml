@@ -1,0 +1,17 @@
+- name: restart supervisor
+  service: name=supervisor state=restarted
+
+- name: restart ntp
+  service: name=ntpd state=restarted
+
+- name: restart named
+  service: name=named state=restarted
+
+- name: restart monit
+  service: name=monit state=restarted
+
+- name: restart unbound
+  service: name=unbound state=restarted
+
+- name: restart iptables
+  service: name=iptables state=restarted
