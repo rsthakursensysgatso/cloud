@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: mypod
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mypod
+    spec:
+      containers:
+      - name: mypod
+        image: rsthakur83/jboss-wildfly
+# OR       image: rsthakur83/tutum-hello
+        ports:
+        - containerPort: 80
+      volumeMounts:
+#      - mountPath: "/usr/share/nginx/html"
+      - mountPath: "/mnt"
+        name: mypod
+  volumes:
+    - name: mypod
+      persistentVolumeClaim:
+       claimName: myclaim-1
+
