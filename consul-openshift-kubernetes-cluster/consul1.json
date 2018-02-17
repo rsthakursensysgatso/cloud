@@ -8,11 +8,12 @@
   "encrypt": "EXz7LFN8hpQ4id8EDYiFoQ==",
   "enable_debug": true,
   "bind_addr": "IP",
-  "bootstrap": true,
+  "bootstrap": false,
   "client_addr": "0.0.0.0",
   "advertise_addr": "IP",
   "retry_join": [
-    "consul-0.consul.newapp.svc.cluster.local:8301"
+    "consul-0.consul.newapp.svc.cluster.local:8301",
+    "consul-2.consul.newapp.svc.cluster.local:8301"
    ]
 
 }
