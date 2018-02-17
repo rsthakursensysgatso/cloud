@@ -20,7 +20,8 @@ spec:
 #          - name: CLUSTER_WITH
 #            value: "consul-0"
         #image: clusterconsul
-        image: docker.io/rsthakur83/consul
+        #image: docker.io/rsthakur83/consul ## with bootstrap enabled for all getting alert
+        image: docker.io/rsthakur83/consul-u-bootstrap
         ports:
            
           - containerPort: 8500
