@@ -17,8 +17,6 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: status.podIP          
-#          - name: CLUSTER_WITH
-#            value: "consul-0"
         #image: clusterconsul
         #image: docker.io/rsthakur83/consul ## with bootstrap enabled for all getting alert
         image: docker.io/rsthakur83/consul-u-bootstrap
@@ -40,9 +38,17 @@ spec:
             name: server
 
 
-          #hostPort: 344
-        # These volume mounts are persistent. Each pod in the StatefulSet
-        # gets a volume mounted based on this field.
-          #mountPath: /data
-  # These are converted to volume claims by the controller
-  # and mounted at the paths mentioned above.
+############## OPTIONAL FOR ADDING PV & PVC #############
+        volumeMounts:
+        - name: consul
+          mountPath: /opt/consul
+  volumeClaimTemplates:
+  - metadata:
+      name: consul
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi # make this bigger in production
