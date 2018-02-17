@@ -1,0 +1,47 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: consul
+spec:
+  serviceName: consul
+  replicas:  3
+  template:
+    metadata:
+      labels:
+        app: consul
+    spec:
+      containers:
+      - name: consul
+        env:
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP          
+#          - name: CLUSTER_WITH
+#            value: "consul-0"
+        #image: clusterconsul
+        image: docker.io/rsthakur83/consul
+        ports:
+           
+          - containerPort: 8500
+            name: ui-port
+          - containerPort:  8400
+            name: alt-port
+          - containerPort: 53
+            name: udp-port
+          - containerPort:  8600
+            name: consuldns
+          - containerPort:  8301
+            name: serflan
+          - containerPort: 8600
+            name: serfwan
+          - containerPort:  8300
+            name: server
+
+
+          #hostPort: 344
+        # These volume mounts are persistent. Each pod in the StatefulSet
+        # gets a volume mounted based on this field.
+          #mountPath: /data
+  # These are converted to volume claims by the controller
+  # and mounted at the paths mentioned above.

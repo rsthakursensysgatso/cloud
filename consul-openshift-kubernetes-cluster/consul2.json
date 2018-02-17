@@ -1,0 +1,18 @@
+{
+  "datacenter": "dc1",
+  "data_dir": "/opt/consul/",
+  "log_level": "INFO",
+  "node_name": "agent2",
+  "server": true,
+  "ui": true,
+  "encrypt": "EXz7LFN8hpQ4id8EDYiFoQ==",
+  "enable_debug": true,
+  "bind_addr": "IP",
+  "bootstrap": true,
+  "client_addr": "0.0.0.0",
+  "advertise_addr": "IP",
+  "retry_join": [
+    "consul-0.consul.newapp.svc.cluster.local:8301"
+   ]
+
+}
