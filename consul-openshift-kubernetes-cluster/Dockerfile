@@ -17,14 +17,3 @@ RUN chmod 777 -R /opt/consul
 RUN chmod +x /var/start.sh
 EXPOSE 8500 8300 8400 8301 8302 8600 53 
 CMD ["/var/start.sh"]
-#CMD ["consul", "agent", "-server", "-config-dir", "/etc/consul"]
-#RUN  consul agent -server -config-dir /etc/consul
-#CMD ["consul agent -server -bootstrap-expect 1 \
-#    -data-dir /tmp/consul -node=agent-one \
-#    -bind=$YOURIP \
-#    -client=0.0.0.0 \
-#    -config-dir /etc/consul.d \
-#    -ui-dir /opt/consul-ui"]
-#EXPOSE 8500 8300 8400 8301 8302
-#CMD ["/bin/bash",  "/var/init.sh"]
-#CMD ["/var/init.sh"]
