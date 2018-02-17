@@ -20,8 +20,8 @@ elif [ "$MY_POD_NAME" = "consul-2" ];then
     echo "Consul-2"
     sed -i "s/IP/${val}/g" /etc/consul/consul2.json
     consul agent -server -config-dir /etc/consul/consul2.json
-else
-   echo "Consul-3"
+elif [ "$MY_POD_NAME" = "consul-3" ];then
+    echo "Consul-3"
     sed -i "s/IP/${val}/g" /etc/consul/consul.json
     consul agent -server -config-dir /etc/consul/consul.json
 fi
