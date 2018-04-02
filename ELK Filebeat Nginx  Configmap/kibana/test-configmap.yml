@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-staging-sidekiq
+  labels:
+    name: test-staging-sidekiq
+  namespace: newapp
+data:
+  config: |-
+    server.host: '0.0.0.0'
+    elasticsearch.url: 'http://elasticsearch:9200'
+

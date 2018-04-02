@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: kibana
+  namespace: newapp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - name: kibana
+        image: rsthakur83/kibana:6
+        ports:
+        - containerPort: 5601
+        volumeMounts:
+            - mountPath: /usr/share/kibana/config
+              name: test-staging-sidekiq
+      volumes:
+       - name: test-staging-sidekiq
+         configMap:
+            name: test-staging-sidekiq
+            items:
+             - key: config
+               path: kibana.yml

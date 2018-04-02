@@ -1,0 +1,23 @@
+filebeat:
+  prospectors:
+    -
+      paths:
+        - /var/log/*.log
+        - /var/log/filebeat/*.log
+
+      input_type: log
+
+  registry_file: /var/lib/filebeat/registry
+
+
+output:
+
+#  elasticsearch:
+#    hosts: ["localhost:9200"]
+   logstash:
+     hosts: ["logstash:5000"]
+
+
+shipper:
+logging:
+  files:

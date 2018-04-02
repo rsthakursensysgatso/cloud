@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-staging-sidekiq
+  labels:
+    name: logstash-staging-sidekiq
+  namespace: newapp
+data:
+  config: |-
+
+    input {
+    tcp {
+    port => 5000
+    }
+    }
+    output {
+    elasticsearch {
+    hosts => "elasticsearch:9200"
+    }
+    }
