@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: filebeat
+  namespace: newapp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: filebeat
+    spec:
+      containers:
+      - name: filebeat
+        image: rsthakur83/myfilebeat
+        env:
+          - name:  LOGSTASH_HOST
+            value: logstash
+          - name: LOGSTASH_PORT
+            value: "5000"
+          - name: SHIPPER_NAME
+            value: LOGGER
+        volumeMounts:
+        - name: socklog
+          mountPath: /tmp/docker.sock
+      volumes:
+      - name: socklog
+        hostPath:
+          path: /var/run/docker.sock
