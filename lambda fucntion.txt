@@ -1,0 +1,16 @@
+####### USE PYTHON 3.6
+import boto3
+client = boto3.client('sns')
+
+def lambda_handler(event, context):
+    print(str(event))
+    instance_id = event['detail']['instance-id']
+    state = event['detail']['state']
+    date = event['time']
+    whathappen = "The instance with id={}, has been {},  at={}".format(instance_id, state, date)
+    
+    client.publish(TopicArn= 'arn:aws:sns:us-east-1:919812626908:ec2updown',
+        Message=whathappen)
+    
+
+
