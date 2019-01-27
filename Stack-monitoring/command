@@ -1,0 +1,2 @@
+oadm policy add-scc-to-user anyuid -z default
+oc edit scc restricted
