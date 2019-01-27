@@ -1,0 +1,40 @@
+global:
+
+
+  external_labels:
+      monitor: 'my-project'
+
+rule_files:
+#  - "alert.rules"
+  - "./alert.rules"
+
+scrape_configs:
+#  - job_name: 'prometheus'
+#    scrape_interval: 5s
+#    static_configs:
+#         - targets: ['localhost:9090','cadvisor:8080','node-exporter:9100']
+#         - targets: ['$NODENAME:9090','192.168.56.110:8080','192.168.56.110:9100','192.168.56.110:9093']
+#         - targets: ['192.168.56.110:9090','192.168.56.110 -g:8080','192.168.56.110:9100','192.168.56.110:9093'] #'192.168.56.102:9100','192.168.56.102:8080']
+
+  - job_name: 'cadvisor'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  - job_name: 'nodeexporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['nodeexporter:9100']
+
+  - job_name: 'prometheus'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['prometheus:9090']
+
+#alerting:
+#  alertmanagers:
+#  - scheme: https
+#    static_configs:
+#    - targets:
+#      - "NODENAME:9093"
+

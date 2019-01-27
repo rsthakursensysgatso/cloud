@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-staging-sidekiq
+  labels:
+    name: logstash-staging-sidekiq
+  namespace: newapp
+data:
+  config: |-
+
+    input {
+    beats {
+    port => 5000
+    }
+    }
+   
+    filter {
+    if [type] == "filebeat-docker-logs" {
+    grok {
+        match => { "message" => "%{SYSLOGLINE}" }
+    }
+    } 
+    }
+    output {
+    if "GMT+0000"  in [message] {
+            elasticsearch {
+            hosts => "elasticsearch:9200"
+            index => "filebeat-app-log"
+            document_type => "log"
+    }
+    }
+    }
