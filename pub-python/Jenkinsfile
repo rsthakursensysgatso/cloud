@@ -5,7 +5,9 @@ node {
    		
    	stage 'Checkout'
    		git url: 'https://github.com/rsthakur83/pub-python'
-
+	stage 'shovel parameter'
+		sh 'pass=`python3.6 pub-python/shovel.py`'
+		sh 'echo $pass'
     stage('Get Build Numbers') {
         withPythonEnv('/usr/bin/python3.6') {
 		//pysh 'python3.6 --version'
@@ -14,12 +16,13 @@ node {
         //from subprocess import Popen, PIPE
         import subprocess
         import os
-//        import boto3
-        def myf():
-            rr = subprocess.Popen(["cloud/pub-python/pub.sh"], stdout=subprocess.PIPE)
-            out,err = rr.communicate()
-            print(out)
-myf()
+        import boto3
+	
+//        def myf():
+//            rr = subprocess.Popen(["cloud/pub-python/pub.sh"], stdout=subprocess.PIPE)
+//            out,err = rr.communicate()
+//            print(out)
+//myf()
 		}
     }
 
