@@ -10,7 +10,6 @@ node {
         withPythonEnv('/usr/bin/python3.6') {
 		//pysh 'python3.6 --version'
 	print('python3.6 --version')
-	print(python3.6 --version)
 	import json
         from subprocess import Popen, PIPE
         import subprocess
