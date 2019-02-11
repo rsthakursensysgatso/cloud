@@ -15,7 +15,7 @@ node {
         import subprocess
         import os
 //        import boto3
-        def myf()
+        def myf():
             rr = subprocess.Popen(["cloud/pub-python/pub.sh"], stdout=subprocess.PIPE)
             out,err = rr.communicate()
             print(out)
