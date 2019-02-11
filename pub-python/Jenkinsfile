@@ -1,0 +1,28 @@
+node {
+   
+   	stage 'Stage 1'
+   		echo 'Hello Deploying Docker App'
+   		
+   	stage 'Checkout'
+   		git url: 'https://github.com/rsthakur83/pub-python'
+
+    stage('Get Build Numbers') {
+        withPythonEnv('/usr/bin/python3.6') {
+		//pysh 'python3.6 --version'
+		 print('python3.6 --version')
+		 print(python3.6 --version)
+		import json
+        from subprocess import Popen, PIPE
+        import subprocess
+        import os
+//        import boto3
+        def myf()
+            rr = subprocess.Popen(["cloud/pub-python/pub.sh"], stdout=subprocess.PIPE)
+            out,err = rr.communicate()
+            print(out)
+myf()
+		}
+    }
+
+
+ }
