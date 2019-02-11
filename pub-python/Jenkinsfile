@@ -12,11 +12,11 @@ node {
         withPythonEnv('/usr/bin/python3.6') {
 		//pysh 'python3.6 --version'
 	print('python3.6 --version')
-	import json
+	//import json
         //from subprocess import Popen, PIPE
-        import subprocess
-        import os
-        import boto3
+       // import subprocess
+        //import os
+        //import boto3
 	
 //        def myf():
 //            rr = subprocess.Popen(["cloud/pub-python/pub.sh"], stdout=subprocess.PIPE)
