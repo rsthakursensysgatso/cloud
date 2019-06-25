@@ -20,18 +20,19 @@ def lambda_handler(event, context):
             dbident=(db['DBInstanceIdentifier'])
             print("RDS  snapshot backups stated at %s...\n" % datetime.datetime.now())
             try:
-                    client.create_db_snapshot(
-                        DBInstanceIdentifier=dbident,
-                        DBSnapshotIdentifier='%s-%s' % (dbident, datetime.datetime.now().strftime("%y-%m-%d-%H-%M")),
-                        Tags=[
-                            {
-                                'Key': 'CostCenter',
-                                'Value': 'rdsbkp'
-                            },
-                        ]
-                    )
-                    bkpmessage= "Backup started & will Complete Soon for Database", db['DBInstanceIdentifier']
-                    pub()
+		if dbident=='bi-integration' or dbident=='bi-qa':
+	                    client.create_db_snapshot(
+        	                DBInstanceIdentifier=dbident,
+                	        DBSnapshotIdentifier='%s-%s' % (dbident, datetime.datetime.now().strftime("%y-%m-%d-%H-%M")),
+                        	Tags=[
+	                            {
+        	                        'Key': 'CostCenter',
+	                                'Value': 'rdsbkp'
+        	                    },
+                	        ]
+	                    )
+        	            bkpmessage= "Backup started & will Complete Soon for Database", db['DBInstanceIdentifier']
+                	    pub()
             except Exception as e:
                             print('Cannot Create Snapshot Because Backup in progress or DB is not in available state '+ str(e))
 
