@@ -1,4 +1,5 @@
 Test
+<<<<<<< HEAD
 test1
 test2
 
@@ -7,3 +8,5 @@ testt 4
 
 test 5
 test 6
+=======
+>>>>>>> parent of 6ef5426... git revert test
