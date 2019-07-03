@@ -5,7 +5,7 @@ import sys
 
 if __name__ == '__main__':
 
-    wekbook_url = 'https://hooks.slack.com/services/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'
+    wekbook_url = 'https://hooks.slack.com/services/xxxx'
     val = sys.argv[1:]
     #print(value)
     data = {
