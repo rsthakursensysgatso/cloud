@@ -6,4 +6,3 @@ xx = "guru99 education is fun"
 r1 = re.split(r"\s",xx)
 print(r1)
 print(type(r1))
- 
