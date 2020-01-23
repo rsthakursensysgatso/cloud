@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="URL Shortener with Python Flask, Bootstrap, API Gateway, Lambda and DynamoDB">
+  <meta name="author" content="Ruan Bekker">
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+
+  <title>{{ app_title }}</title>
+
+  <link href="http://flask.pocoo.org/docs/0.12/_static/flask-favicon.ico" rel="icon">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://getbootstrap.com/docs/3.3/examples/justified-nav/justified-nav.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+  <style>
+    heading {
+      font-family: 'Raleway', sans-serif;
+      font-size: 46px;
+    }
+  </style>
+
+
+
+</head>
+
+<body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="{{ url_for('index') }}">Home</a>
+    </div>
+    <ul class="nav navbar-nav">
+        {% if current_user.is_anonymous %}
+       <li> <a href="{{ url_for('login') }}">Login</a></li>
+        {% else %}
+       <li> <a href="{{ url_for('logout') }}">Logout</a></li>
+       <li> <a href="{{ url_for('user', username=current_user.username) }}">   About user  </a></li>
+       <li> <a href="{{ url_for('add_post') }}">Add New  POST</a></li>
+      <li>  <a href="{{ url_for('edit_profile') }}">Edit your profile</a></li>
+        <li> <a href="{{ url_for('cart') }}">Add Product to Purchase</a></li>
+          <li>  <a href="{{ url_for('total_item') }}">Total items</a></li>
+           <li> <a href="{{ url_for('total_item') }}">Brands</a></li>
+        {% endif %}
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  <div class="container">
+
+    <div class="jumbotron">
+	<heading>{{ app_title }}</heading>
+    </div>
+
+
+
+  </div>
+        {% block content %}{% endblock %}
+</body>
+</html>
