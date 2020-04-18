@@ -25,8 +25,11 @@ pipeline {
             }
         }
 	stage('Scan Image') {
+		
+		steps {
 	    aquaMicroscanner imageName: ${IMAGE_URL_WITH_TAG}, notCompliesCmd: 'exit 1', onDisallowed: 'fail', outputFormat: 'html'
 	    }
+	}
         
 	 stage('Docker Deploy Dev'){
             steps{
