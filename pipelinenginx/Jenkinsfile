@@ -25,7 +25,7 @@ pipeline {
             }
         }
 	stage('Scan Image') {
-	    aquaMicroscanner imageName: 'IMAGE_URL_WITH_TAG', notCompliesCmd: 'exit 1', onDisallowed: 'fail', outputFormat: 'html'
+	    aquaMicroscanner imageName: ${IMAGE_URL_WITH_TAG}, notCompliesCmd: 'exit 1', onDisallowed: 'fail', outputFormat: 'html'
 	    }
         
 	 stage('Docker Deploy Dev'){
