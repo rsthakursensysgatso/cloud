@@ -11,6 +11,7 @@ pipeline {
     stages{
         stage('Build Docker Image'){
             steps{
+		sh "cd pipelinenginx"
                 sh "docker build . -t ${IMAGE_URL_WITH_TAG}"
             }
         }
