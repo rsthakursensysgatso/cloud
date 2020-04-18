@@ -1,9 +1,10 @@
 pipeline {
     agent any
+     string(defaultValue: "v1", description: 'Image version', name: 'imageversion')
     environment{
-        //DOCKER_TAG = getDockerTag()
+        DOCKER_TAG = env
         NEXUS_URL  = "172.31.34.232:8080"
-        IMAGE_URL_WITH_TAG = "rsthakur83/nginx:${DOCKER_TAG}"
+        IMAGE_URL_WITH_TAG = "rsthakur83/nginx:${params.imageversion}"
     }
     stages{
         stage('Build Docker Image'){
