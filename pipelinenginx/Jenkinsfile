@@ -15,8 +15,9 @@ pipeline {
                 sh "docker build  -t ${IMAGE_URL_WITH_TAG} --file ./pipelinenginx/Dockerfile ."
             }
         }
-        stage('Nexus Push'){
+        stage('Docker Image Push'){
             steps{
+		    
                 withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerpwd')]) {
                     sh "docker login -u admin -p ${dockerpwd}"
                     sh "docker push ${IMAGE_URL_WITH_TAG}"
