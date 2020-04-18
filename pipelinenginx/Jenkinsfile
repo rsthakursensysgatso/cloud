@@ -32,7 +32,10 @@ pipeline {
             }
         }
 
-        
+        stage ('Wait for approval'){
+                input 'Approve deployment?'
+            }
+	    
 	 stage('Docker Deploy Dev'){
             steps{
                 sshagent(['tomcat-dev']) {
