@@ -44,9 +44,9 @@ pipeline {
 		    
 		    sshagent(['masternode']) {
  			sh "ssh -o StrictHostKeyChecking=no ubuntu@10.10.0.117 ls -lh"
-			sh "scp -r pipelinenginx/myapp ssh -o StrictHostKeyChecking=no ubuntu@10.10.0.117:/home/ubuntu"
-			sh "ssh -o StrictHostKeyChecking=no  -i test-devops.pem ubuntu@52.10.162.213 chmod +x /home/ubuntu/deploy.sh"
-			sh "ssh -o StrictHostKeyChecking=no  -i test-devops.pem ubuntu@52.10.162.213 ./home/ubuntu/deploy.sh"
+			sh "scp -o StrictHostKeyChecking=no -r pipelinenginx/myapp ubuntu@10.10.0.117:/home/ubuntu"
+			sh "ssh -o StrictHostKeyChecking=no   ubuntu@52.10.162.213 chmod +x /home/ubuntu/deploy.sh"
+			sh "ssh -o StrictHostKeyChecking=no   ubuntu@52.10.162.213 ./home/ubuntu/deploy.sh"
 			}
 		    }
 	    }
