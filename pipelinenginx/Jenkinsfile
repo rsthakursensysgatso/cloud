@@ -1,8 +1,6 @@
 pipeline {
     agent any
-	 parameters {
-     string(defaultValue: "v1", description: 'Image version', name: 'imageversion')
-	 }
+
     environment{
         //DOCKER_TAG = env
         NEXUS_URL  = "10.10.0.117:8088"
@@ -28,7 +26,7 @@ pipeline {
             steps{
 		    
                 withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerpwd')]) {
-                    sh "docker login -u rsthakur83 -p ${dockerpwd}"
+                    sh "docker login -u admin -p ${dockerpwd}"
                     sh "docker push ${IMAGE_URL_WITH_TAG}"
                 }
             }
