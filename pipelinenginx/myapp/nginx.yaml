@@ -36,10 +36,34 @@ spec:
       containers:
       - name: mynginx
         image: rsthakur83/nginx
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            cpu: 300m        
-        ports:
-        - containerPort: 80
+    imagePullPolicy: Always
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /
+        port: 80
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 1
+    name: mynginx
+    ports:
+    - containerPort: 80
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /
+        port: 80
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources:
+      limits:
+        cpu: "1"
+        memory: 2Gi
+      requests:
+        cpu: "1"
+        memory: 1Gi
 
