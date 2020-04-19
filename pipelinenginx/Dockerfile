@@ -5,8 +5,8 @@ MAINTAINER Ravinder
 RUN apt-get update \
     && apt-get install -y nginx  ca-certificates \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && echo "daemon off;" >> /etc/nginx/nginx.conf
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*  /etc/nginx/nginx.conf
+    #&& echo "daemon off;" >> /etc/nginx/nginx.conf
 
 ADD https://get.aquasec.com/microscanner .
 RUN chmod +x microscanner
