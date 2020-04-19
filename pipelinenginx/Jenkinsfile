@@ -7,6 +7,7 @@ pipeline {
         //DOCKER_TAG = env
         NEXUS_URL  = "172.31.34.232:8080"
         IMAGE_URL_WITH_TAG = "rsthakur83/nginx:${params.imageversion}"
+	EMAIL_TO = 'rsthakur83@gmail.com'
     }
     stages{
         stage('Build Docker Image'){
@@ -51,6 +52,27 @@ pipeline {
 		    }
 	    }
     }    
+}
+  post {
+    success {
+
+      emailext (
+          subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+          body: """<p>SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
+          recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        )
+    }
+
+    failure {
+
+      emailext (
+          subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+          body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
+          recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        )
+    }
 }
 
 
