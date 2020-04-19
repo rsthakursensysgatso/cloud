@@ -4,7 +4,7 @@ metadata:
   name: myapp
   labels:
     name: myapp
----    
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -33,37 +33,38 @@ spec:
       labels:
         app: mynginx
     spec:
+      restartPolicy: Always
       containers:
       - name: mynginx
         image: rsthakur83/nginx
-    imagePullPolicy: Always
-    livenessProbe:
-      failureThreshold: 3
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 5
-      successThreshold: 1
-      timeoutSeconds: 1
-    name: mynginx
-    ports:
-    - containerPort: 80
-      protocol: TCP
-    readinessProbe:
-      failureThreshold: 3
-      httpGet:
-        path: /
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 5
-      successThreshold: 1
-      timeoutSeconds: 1
-    resources:
-      limits:
-        cpu: "1"
-        memory: 2Gi
-      requests:
-        cpu: "1"
-        memory: 1Gi
-
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
+          requests:
+            cpu: "1"
+            memory: 1Gi
+      imagePullSecrets:
+          - name: regsecret
