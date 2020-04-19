@@ -28,6 +28,10 @@ spec:
       containers:
       - name: mynginx
         image: rsthakur83/nginx
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 300m        
         ports:
         - containerPort: 80
 
