@@ -7,14 +7,14 @@ metadata:
   namespace: myapp
 data:
   config: |-
-	user www-data;
+        user www-data;
         worker_processes auto;
         pid /run/nginx.pid;
 
         events {
                 worker_connections 768;
         }
-
+	### RAVINDER SINGH ## THAKUR##
         http {
 
 
