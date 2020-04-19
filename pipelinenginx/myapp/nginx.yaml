@@ -1,3 +1,10 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: myapp
+  labels:
+    name: myapp
+---    
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,6 +21,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: myapp
   name: mynginx
 spec:
   replicas: 3
