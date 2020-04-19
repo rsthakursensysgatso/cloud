@@ -5,7 +5,7 @@ pipeline {
         //DOCKER_TAG = env
         NEXUS_URL  = "10.10.0.117:8088"
         //IMAGE_URL_WITH_TAG = "rsthakur83/nginx:${params.imageversion}"
-	IMAGE_URL_WITH_TAG= "${NEXUS_URL}/mynginx:${BUILD_NUMBER}"
+	IMAGE_URL_WITH_TAG= "${NEXUS_URL}/mynginx:v${BUILD_NUMBER}"
 	EMAIL_TO = 'rsthakur83@gmail.com'
     }
     stages{
