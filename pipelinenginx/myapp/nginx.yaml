@@ -82,6 +82,6 @@ spec:
             name: nginx-configmap
             items:
              - key: config
-               path: nginx.yml
+               path: nginx.conf
       imagePullSecrets:
           - name: regsecret
