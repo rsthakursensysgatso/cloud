@@ -1,3 +1,4 @@
 #/bin/bash
 
-kubectl create -f myapp/. 
+kubectl apply -f myapp/nginx.yaml
+kubectl patch deployment mynginx -p '{"spec":{"template":{"metadata":{"labels":{"build": "ravi"}}}}}'
