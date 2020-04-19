@@ -6,7 +6,7 @@ if [ $? -eq 0 ]
 then
 
 echo "Patching Deployment mynginx"
-kubectl patch deployment -n myapp mynginx -p '{"spec":{"template":{"metadata":{"labels":{"build": $BUILD_NUMBER}}}}}'
+kubectl patch deployment -n myapp mynginx -p '{"spec":{"template":{"metadata":{"labels":{"build": "'"$BUILD_NUMBER"'"}}}}}'
 else
 
 echo "Deployment mynginx not exist and creating"
