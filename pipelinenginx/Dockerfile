@@ -13,4 +13,4 @@ RUN chmod +x microscanner
 RUN ./microscanner OGY0NGQ3MTI3NmQ4
 
 EXPOSE 80
-CMD ["nginx"]
+CMD ["nginx", "-c", "/usr/share/nginx/nginx.conf"]
