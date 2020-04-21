@@ -3,7 +3,7 @@ pipeline {
 
     environment{
         
-        NEXUS_URL  = "10.10.0.117:8088"
+        NEXUS_URL  = "192.168.56.107:8081"
 	IMAGE_URL_WITH_TAG= "${NEXUS_URL}/mynginx:v${BUILD_NUMBER}"
 	EMAIL_TO = 'rsthakur83@gmail.com'
     }
@@ -43,9 +43,9 @@ pipeline {
 		    
 		    sshagent(['masternode']) {
 			sh "sed -i  's/buildversion/${BUILD_NUMBER}/g' pipelinenginx/myapp/nginx.yaml"
-			sh "scp -o StrictHostKeyChecking=no -r pipelinenginx/myapp pipelinenginx/deploy.sh ubuntu@10.10.0.117:/home/ubuntu"
-			sh "ssh -o StrictHostKeyChecking=no   ubuntu@52.10.162.213 chmod +x /home/ubuntu/deploy.sh"
-			sh "ssh -o StrictHostKeyChecking=no   ubuntu@52.10.162.213 /home/ubuntu/deploy.sh"
+			sh "scp -o StrictHostKeyChecking=no -r pipelinenginx/myapp pipelinenginx/deploy.sh root@192.168.56.107 :/home/ubuntu"
+			sh "ssh -o StrictHostKeyChecking=no   root@192.168.56.107  chmod +x /home/ubuntu/deploy.sh"
+			sh "ssh -o StrictHostKeyChecking=no   root@192.168.56.107  /home/ubuntu/deploy.sh"
 			}
 		    }
 	    }
