@@ -43,7 +43,7 @@ pipeline {
 		    
 		    sshagent(['masternode']) {
 			sh "sed -i  's/buildversion/${BUILD_NUMBER}/g' pipelinenginx/myapp/nginx.yaml"
-			sh "scp -o StrictHostKeyChecking=no -r pipelinenginx/myapp pipelinenginx/deploy.sh root@192.168.56.107 :/home/ubuntu"
+			sh "scp -o StrictHostKeyChecking=no -r pipelinenginx/myapp pipelinenginx/deploy.sh root@192.168.56.107:/home/ubuntu"
 			sh "ssh -o StrictHostKeyChecking=no   root@192.168.56.107  chmod +x /home/ubuntu/deploy.sh"
 			sh "ssh -o StrictHostKeyChecking=no   root@192.168.56.107  /home/ubuntu/deploy.sh"
 			}
