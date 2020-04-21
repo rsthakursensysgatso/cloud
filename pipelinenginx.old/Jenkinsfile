@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+
+    environment{
+        
+        NEXUS_URL  = "10.10.0.117:8088"
+	IMAGE_URL_WITH_TAG= "${NEXUS_URL}/mynginx:v${BUILD_NUMBER}"
+	EMAIL_TO = 'rsthakur83@gmail.com'
+    }
+    stages{
+        stage('Build Docker Image'){
+            steps{
+		sh "cd pipelinenginx"
+                sh "docker build  -t ${IMAGE_URL_WITH_TAG} --file ./pipelinenginx/Dockerfile ."
+            }
+        }
+
+	stage('Scan Image') {
+		
+		steps {
+	    aquaMicroscanner imageName: "${IMAGE_URL_WITH_TAG}", notCompliesCmd: 'exit 1', onDisallowed: 'fail', outputFormat: 'html'
+	    }
+	}	    
+        stage('Docker Image Push'){
+            steps{
+		    
+                withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerpwd')]) {
+			sh "docker login -u admin -p ${dockerpwd} http://${NEXUS_URL}"
+                        sh "docker push ${IMAGE_URL_WITH_TAG}"
+                }
+            }
+        }
+
+        stage ('Wait for approval'){
+		steps {
+                input 'Approve deployment?'
+            }
+	}
+	    
+	    stage('Deploy Nginx App') {
+	    
+		    steps {
+		    
+		    sshagent(['masternode']) {
+			sh "sed -i  's/buildversion/${BUILD_NUMBER}/g' pipelinenginx/myapp/nginx.yaml"
+			sh "scp -o StrictHostKeyChecking=no -r pipelinenginx/myapp pipelinenginx/deploy.sh ubuntu@10.10.0.117:/home/ubuntu"
+			sh "ssh -o StrictHostKeyChecking=no   ubuntu@52.10.162.213 chmod +x /home/ubuntu/deploy.sh"
+			sh "ssh -o StrictHostKeyChecking=no   ubuntu@52.10.162.213 /home/ubuntu/deploy.sh"
+			}
+		    }
+	    }
+    }   
+  post {
+    success {
+		sh "echo Build SUCCESSFUL"
+               emailext body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n ----------- \n${BUILD_LOG, maxLines=100, escapeHtml=false}', 
+                    to: "rsthakur83@gmail.com", 
+                    subject: 'Deployment Build SUCCESSFUL : $PROJECT_NAME - #$BUILD_NUMBER'	    
+   }
+
+    failure {
+	    sh "echo Build FAILED"
+               emailext body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n ----------- \n${BUILD_LOG, maxLines=100, escapeHtml=false}', 
+                    to: "rsthakur83@gmail.com", 
+                    subject: 'Deployment Build FAILED : $PROJECT_NAME - #$BUILD_NUMBER'	    
+    }
+}
+	
+}

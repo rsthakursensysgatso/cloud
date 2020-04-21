@@ -1,0 +1,88 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: myapp
+  labels:
+    name: myapp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mynginx
+  namespace: myapp
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: mynginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: myapp
+  name: mynginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mynginx
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        app: mynginx
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: mynginx
+        image: 10.10.0.117:8088/mynginx:vbuildversion
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
+          requests:
+            cpu: "1"
+            memory: 1Gi
+        volumeMounts:
+            - mountPath: /usr/share/nginx
+              name: nginx-configmap
+      volumes:
+       - name: nginx-configmap
+         configMap:
+            name: nginx-configmap
+            items:
+             - key: config
+               path: nginx.conf
+      imagePullSecrets:
+          - name: regsecret

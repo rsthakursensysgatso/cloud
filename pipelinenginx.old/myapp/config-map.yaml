@@ -13,6 +13,7 @@ data:
         events {
          worker_connections 768;
         }
+        ### RAVINDER SINGH ## THAKUR##
         http {
         sendfile on;
         tcp_nopush on;
