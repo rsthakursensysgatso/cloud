@@ -3,7 +3,7 @@ pipeline {
 
     environment{
         
-        NEXUS_URL  = "192.168.56.107:8081"
+        NEXUS_URL  = "192.168.56.107:8088"
 	IMAGE_URL_WITH_TAG= "${NEXUS_URL}/mynginx:v${BUILD_NUMBER}"
 	EMAIL_TO = 'rsthakur83@gmail.com'
     }
