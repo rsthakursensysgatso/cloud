@@ -44,7 +44,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: mynginx
-        image: 10.10.0.117:8088/mynginx:vbuildversion
+        image: 192.168.56.107:8088/mynginx:vbuildversion
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 3
