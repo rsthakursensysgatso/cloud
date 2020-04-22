@@ -1,8 +1,8 @@
 #/bin/bash
 
-kubectl apply -f myapp/nginx.yaml
-kubectl apply -f myapp/config-map.yaml
-kubectl apply -f myapp/hpa.yaml
+kubectl apply -f /home/ubuntu/myapp/nginx.yaml
+kubectl apply -f /home/ubuntu/myapp/config-map.yaml
+kubectl apply -f /home/ubuntu/myapp/hpa.yaml
 kubectl get deployment -n myapp mynginx
 if [ $? -eq 0 ]
 then
