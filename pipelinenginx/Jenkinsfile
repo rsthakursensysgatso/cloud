@@ -41,7 +41,7 @@ pipeline {
 	    
 		    steps {
 		    
-		    sshagent(['masternode']) {
+		    sshagent(['8e9cc002-f19dewiydtwe765-ecec834']) {
 			sh "sed -i  's/buildversion/${BUILD_NUMBER}/g' pipelinenginx/myapp/nginx.yaml"
 			sh "scp -o StrictHostKeyChecking=no -r pipelinenginx/myapp pipelinenginx/deploy.sh kube@192.168.56.107:/home/kube"
 			sh "ssh -o StrictHostKeyChecking=no   kube@192.168.56.107  chmod +x /home/kube/deploy.sh"
