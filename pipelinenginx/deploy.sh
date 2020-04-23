@@ -13,3 +13,7 @@ else
 
 echo "Deployment mynginx not exist so created above"
 fi
+
+mypod=`kubectl get pods -n myapp|grep myng|tail -1|awk '{print $1}'`
+
+kubectl port-forward $mypod 31894:80 -n myapp &
