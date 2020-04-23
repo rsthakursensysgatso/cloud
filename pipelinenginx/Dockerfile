@@ -7,7 +7,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*  /etc/nginx/nginx.conf
 
-
+ADD index.nginx-debian.html /var/www/html
 ADD https://get.aquasec.com/microscanner .
 RUN chmod +x microscanner
 RUN ./microscanner OGY0NGQ3MTI3NmQ4
