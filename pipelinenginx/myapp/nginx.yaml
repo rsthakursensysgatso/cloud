@@ -69,11 +69,11 @@ spec:
           timeoutSeconds: 1
         resources:
           limits:
-            cpu: "1"
-            memory: 2Gi
+            cpu: "200m"
+            memory: 200MiB
           requests:
-            cpu: "1"
-            memory: 1Gi
+            cpu: "200m"
+            memory: 2Gi
         volumeMounts:
             - mountPath: /usr/share/nginx
               name: nginx-configmap
