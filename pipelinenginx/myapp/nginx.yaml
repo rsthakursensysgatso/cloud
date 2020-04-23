@@ -73,7 +73,7 @@ spec:
             memory: 200Mi
           requests:
             cpu: "200m"
-            memory: 2Gi
+            memory: 200Mi
         volumeMounts:
             - mountPath: /usr/share/nginx
               name: nginx-configmap
