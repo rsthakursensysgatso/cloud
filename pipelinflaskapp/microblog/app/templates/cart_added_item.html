@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users Items</title>
+<title>Font Awesome Icons</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<table>
+    <tbody>
+
+  <div class="row">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Description</div>
+
+
+ </div>
+
+              <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <p>
+
+    {% for i in my_all_items %}
+   {% for key, value in all_items.items() %}
+
+
+          {% if i.prod_id == key %}
+
+            <tr>
+                      <td><button  type="submit"  form="addccart" style="font-size:14px"> <i class="fa fa-plus-square-o"></i></button></td>
+                     <form action=" {{ url_for('add_to_cart', id=3) }}" method=post id="addccart"> </form> </span>
+                     <td><i class="fa" style="font-size:24px">&#xf07a;</i></td>
+                     <td><img src="{{ i.image_url }}" alt="{{ i.image_filename }}" style="width:200px;height:150px;"></td>
+
+                      <td> {{value}}</td>
+                      <td><button  type="submit"  form="removeccart" style="font-size:14px"> <i class="fa fa-minus-square-o"></i></button></td>
+                      <form action=" {{ url_for('remove_from_cart', id=3) }}" method=post id="removeccart"> </form> </span>
+            </tr>
+
+{% endif %}
+          {% endfor %}
+  {% endfor %}
+
+      </p>
+    </div>
+  </body>
+
+
+</table>
+
+</html>

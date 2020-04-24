@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users Items</title>
+
+</head>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+</style>
+
+<form action=" {{ url_for('cart') }}">
+    <input type="submit" value="Go to  Add Cart" />
+</form>
+
+
+
+<table>
+    <tbody>
+
+
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">Description</div>
+
+
+      <div class="container">
+    {%for i in my_total_item_list.items %}
+        <div class="panel panel-primary">
+            <img src="{{ i.image_url }}" alt="{{ i.image_filename }}" style="width:200px;height:150px;">
+        <div class="panel-body">    {{i.prod_id}} {{ i.part_name }}  <b>{{ i.part_desc }} {{ i.part_cost}}
+ <p> <a href="{{ url_for('about_item', id=i.prod_id) }}"><button type="button" class="btn btn-primary" style="background-color:Green"> Show Item Detail</button> </a> </p>
+        </div>
+          {% endfor %}
+    {% for page in my_total_item_list.iter_pages() %}
+  {% if page %}
+   <a href="{{ url_for('paginator', page_num=page) }}"> {{page}}</a>
+  {% else %}
+  ...
+  {% endif %}
+{% endfor %}
+
+        <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+  </body>
+    </tbody>
+</table>
+
+</html>

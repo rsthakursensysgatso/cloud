@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Confirm Delivery Address</h1>
+    <form action="" method="post" enctype=multipart/form-data novalidate>
+         {{ form.hidden_tag() }}
+        <p>
+
+            {{ form.order_user_address.label }}<br>
+            {{ form.order_user_address(size=132) }}<br>
+            {% for error in form.order_user_address.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+
+
+        {%for v in item %}
+           <tr>
+               <img src="{{ v.image_url }}" alt="{{ v.image_filename }}" style="width:200px;height:150px;">
+    <div class="panel-body"> {{ v.prod_id}} {{ v.part_name }}  <b>{{ v.part_desc }} {{ v.part_cost}}  </b>
+    <p> <a href="{{ url_for('about_item', id=v.prod_id) }}"><button type="button" class="btn btn-primary" style="background-color:Green"> Show Item Detail</button> </a> </p>
+     </tr>
+        {% endfor %}
+
+<p>{{ form.submit() }}</p>
+    </form>
+
+
+{% endblock %}

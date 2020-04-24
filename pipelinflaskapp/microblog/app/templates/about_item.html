@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users Items</title>
+
+</head>
+<table>
+    <tbody>
+
+  <div class="row">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Description</div>
+
+
+ </div>
+      {% if all_items.image_url %}
+          <img src="{{ all_items.image_url }}" alt="{{ all_items.image_filename }}" style="width:200px;height:150px;">
+      <td>    <a href="{{ url_for('total_item') }}"><button type="button" class="btn btn-primary" style="background-color:Green"> List All Items</button> </a></td>
+           <tr>
+
+<td>     <button type="submit" class="btn btn-primary" style="background-color:Red" form="nameform" value="Submit">Delete</button></td>
+         <form action=" {{ url_for('delete_item', id=all_items.prod_id) }}" method=post id="nameform"> </form>
+           </tr>
+
+
+              <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <p>
+
+            <td><button type="submit"  class="btn btn-primary" form="addccart" value="Submit"><span class="glyphicon glyphicon-shopping-cart"> Shopping Cart</button></td>
+            <form action=" {{ url_for('add_to_cart', id=all_items.prod_id) }}" method=post id="addccart"> </form> </span>
+        {% for key, value in all_items_data.items() %}
+{% if all_items.prod_id == key %}
+
+        <td> <b>{{value}} </b></td>
+
+{% endif %}
+{% endfor %}
+            <td><button type="submit"  class="btn btn-danger" form="removeccart" value="Submit"><span class="glyphicon glyphicon-shopping-cart"> Remove Cart</button></td>
+            <form action=" {{ url_for('remove_from_cart', id=all_items.prod_id) }}" method=post id="removeccart"> </form> </span>
+
+    <tr>
+
+                    <td><button type="submit"  class="btn btn-primary" form="getfromcart" value="Submit"><span class="glyphicon glyphicon-shopping-cart"> All Items Cart</button></td>
+            <form action=" {{ url_for('get_all_from_cart')}}" method=get id="getfromcart"> </form> </span>
+
+    </tr>
+
+
+      </p>
+    </div>
+  </body>
+
+
+    {% endif %}
+
+
+
+    </tbody>
+</table>
+
+</html>
