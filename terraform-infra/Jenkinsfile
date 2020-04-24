@@ -22,5 +22,17 @@ pipeline {
 
 		
 		}
+	
+		stage('Destroy Infra on AWS') {
+
+				when {
+					  expression { params.REQUESTED_ACTION == 'destroy' }
+				}
+			steps {
+			sh "cd terraform-infra"
+			sh "terraform init; terraform destroy -auto-approve "
+			}	
+			
+		}	
+	}
 }
-}	
