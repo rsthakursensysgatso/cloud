@@ -173,6 +173,9 @@ resource "aws_autoscaling_group" "machine-factory-v1" {
 }
 
 
+output "lb_address" {
+  value = "${aws_elb.web-elb.public_dns}"
+}
 
 output "elb" {
   value = "${aws_elb.web-elb.name}"
