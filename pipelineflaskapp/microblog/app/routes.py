@@ -49,7 +49,7 @@ def forget_password():
         msg = Message('Hello', sender='rsthakur83@gmail.com', recipients=['rsthakur83@yahoo.com'])
         #msg.body = "Hello Shalllu Ravinder App message sent from Flask-Mail"
         q= {'token': token}
-        msg.body =  "http://192.168.56.107:5000/new_password?{}".format(urllib.parse.urlencode(q))
+        msg.body =  "http://192.168.56.107:31017/new_password?{}".format(urllib.parse.urlencode(q))
         mail.send(msg)
     return render_template("forget_password.html", title='Forget Password', form=form)
 
