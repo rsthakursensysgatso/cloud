@@ -1,5 +1,5 @@
 FROM python:3.6
-COPY microblog/ /app
+COPY ./pipelineflaskapp/microblog/ /app
 WORKDIR /app/microblog/
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
