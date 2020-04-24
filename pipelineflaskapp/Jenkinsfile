@@ -18,7 +18,7 @@ pipeline {
 	stage('Scan Image') {
 		
 		steps {
-	    aquaMicroscanner imageName: "${IMAGE_URL_WITH_TAG}", notCompliesCmd: ", onDisallowed: 'ignore', outputFormat: 'html'
+	    aquaMicroscanner imageName: "${IMAGE_URL_WITH_TAG}", notCompliesCmd: '', onDisallowed: 'ignore', outputFormat: 'html'
 	    }
 	}	    
         stage('Docker Image Push'){
