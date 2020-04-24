@@ -9,24 +9,24 @@ pipeline {
 
     stages{
 
-	stage('Deploying Infra on AWS') {
+		stage('Deploying Infra on AWS') {
 
-            when {
-                  expression { params.REQUESTED_ACTION == 'create' }
-            }	
-		
-		steps {
-	        sh "cd terraform-infra"
-		sh "terraform init; terraform apply -auto-approve "
-	    }
+				when {
+					  expression { params.REQUESTED_ACTION == 'create' }
+				}	
+			
+			steps {
+			sh "cd terraform-infra"
+			sh "sh "terraform init; terraform apply -auto-approve ""
+			}
 
-            when {
-                  expression { params.REQUESTED_ACTION == 'destroy' }
-            }
-		steps {
-	        sh "cd terraform-infra"
-		sh "terraform init; terraform destroy -auto-approve "
-	    }			
-	}
+				when {
+					  expression { params.REQUESTED_ACTION == 'destroy' }
+				}
+			steps {
+			sh "cd terraform-infra"
+			sh "terraform init; terraform destroy -auto-approve "
+			}			
+		}
 }
 }	
