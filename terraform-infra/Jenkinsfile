@@ -16,15 +16,15 @@ pipeline {
             }	
 		
 		steps {
-	    sh "cd terraform-infra"
-		sh "sh "terraform init; terraform apply -auto-approve ""
+	        sh "cd terraform-infra"
+		sh "terraform init; terraform apply -auto-approve "
 	    }
 
             when {
                   expression { params.REQUESTED_ACTION == 'destroy' }
             }
 		steps {
-	    sh "cd terraform-infra"
+	        sh "cd terraform-infra"
 		sh "terraform init; terraform destroy -auto-approve "
 	    }			
 	}
