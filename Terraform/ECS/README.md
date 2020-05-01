@@ -1,4 +1,4 @@
-# Fourthline ECS Cluster Setup Using Terraform
+#  ECS Cluster Setup Using Terraform
 
 # Note 
 Make sure that you have aws credential under file /root/.aws/credentials because that is how i have tested setup and also same path configured in file ecs-service-role.tf
