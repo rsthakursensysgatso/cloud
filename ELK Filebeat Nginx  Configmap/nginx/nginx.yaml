@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: nginx
+  namespace: newapp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+
+#      volumes:
+#       - name: shared-data
+#         emptyDir: {}
+
+      containers:
+      - name: nginx
+        image: rsthakur83/nginx
+        ports:
+        - containerPort: 80
+
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/log/nginx
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+
+#        volumeMounts:
+#            - name: shared-data
+#              mountPath: /var/log/nginx
+
+#      - name: filebeat
+#        image: rsthakur83/filebeat
+#        volumeMounts:
+#            - name: shared-data
+#              mountPath: /var/log/filebeat
+#              readOnly: true

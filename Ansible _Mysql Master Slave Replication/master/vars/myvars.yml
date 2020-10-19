@@ -1,0 +1,4 @@
+host: 192.168.56.104
+dir: /root/whois
+rpass: password
+spass: password

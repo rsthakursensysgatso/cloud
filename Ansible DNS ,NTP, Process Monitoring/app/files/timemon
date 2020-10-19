@@ -1,0 +1,2 @@
+check process time 
+start program  "/usr/sbin/time.sh"

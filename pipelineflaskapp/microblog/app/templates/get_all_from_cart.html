@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users Items</title>
+<title>Font Awesome Icons</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<table>
+    <tbody>
+
+  <div class="row">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Description</div>
+
+
+ </div>
+
+              <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <p>
+
+    {% for i in my_all_items %}
+   {% for key, value in all_items.items() %}
+
+
+          {% if i.prod_id == key %}
+
+            <tr>
+
+                     <td><i class="fa" style="font-size:24px">&#xf07a;</i></td>
+                     <td><img src="{{ i.image_url }}" alt="{{ i.image_filename }}" style="width:200px;height:150px;"></td>
+
+                      <td> {{value}}</td>
+
+            </tr>
+
+{% endif %}
+          {% endfor %}
+
+  {% endfor %}
+
+                    <td><button type="submit"  class="btn btn-primary" form="deliveryaddr" value="Submit"><span class="glyphicon glyphicon-shopping-cart"> Place Order</button></td>
+            <form action=" {{ url_for('delivery_address')}}" method=get id="deliveryaddr"> </form> </span>
+
+                            <td><button type="submit"  class="btn btn-primary" form="list_all_item" value="Submit"><span class="glyphicon glyphicon-shopping-cart"> Back to All Items</button></td>
+            <form action=" {{ url_for('total_item')}}" method=get id="list_all_item"> </form> </span>
+      </p>
+    </div>
+  </body>
+
+
+</table>
+
+</html>

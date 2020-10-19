@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>PRODUCT ITEMS FOR PURCHASE</h1>
+    <form action="" method="post" enctype=multipart/form-data novalidate>
+         {{ form.hidden_tag() }}
+        <p>
+
+            {{ form.part_name.label }}<br>
+            {{ form.part_name(size=32) }}<br>
+            {% for error in form.part_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.part_cost.label }}<br>
+            {{ form.part_cost(size=32) }}<br>
+            {% for error in form.part_cost.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.part_desc.label }}<br>
+            {{ form.part_desc(cols=50, rows=4) }}<br>
+            {% for error in form.part_desc.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.part_image.label }}<br>
+            {{ form.part_image(cols=50, rows=4) }}<br>
+            {% for error in form.part_image.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+<p>{{ form.submit() }}</p>
+    </form>
+
+
+{% endblock %}

@@ -1,0 +1,14 @@
+---
+
+   - name: Install iptables
+     yum: name=iptables state=installed
+
+
+
+   - name: Configure Iptables rules 
+     copy: src=/root/vagrant/myapp/private/ansible/finalapp/common/files/iptables dest=/etc/sysconfig/iptables
+     notify:
+     - restart iptables
+   
+   - name: Enable iptables service
+     service: name=iptables state=started

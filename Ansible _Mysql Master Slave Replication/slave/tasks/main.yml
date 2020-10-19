@@ -1,0 +1,67 @@
+---
+
+   - include_vars: myvars.yml
+
+   - name: Copy DB config file
+     copy:
+       src: my.cnf
+       dest:  /etc/my.cnf
+       owner: root
+       group: root
+       mode: '0644'
+     notify:
+        - restart mariadb
+ 
+
+
+   - name: Bin file name
+     shell: /usr/bin/mysql -uroot -p{{rpass}} -h "{{ mhost }}" -e  "show master status;"| awk '{print $1}'|tail -1
+     register: result
+
+   - name: Bin Position
+     shell: /usr/bin/mysql -uroot -p{{rpass}} -h "{{ mhost }}" -e  "show master status;"| awk '{print $2}'|tail -1
+     register: pst
+
+
+   - name: Print the bin value
+     shell: echo result.stdout
+   - debug: msg="{{result.stdout}}"
+
+   - name: Print the bin position
+     shell: echo  pst.stdout
+   - debug: msg="{{pst.stdout}}"
+
+
+   - name: Create directory
+     file: path={{dir}} state=directory
+
+
+
+   - name: Copy Database script
+     copy: src=table.py  dest={{dir}} group=root mode='0755'
+
+   - name: create the WHOIS database
+     mysql_db: db=whois
+            state=present
+     
+
+   - name: Create whois User
+     mysql_user:
+      name: whois
+      password: password
+      priv: '*.*:ALL,GRANT'
+      state: present
+
+
+   - name: Set root password
+     shell: mysqladmin -u root password "{{ rpass }}"
+
+   - name: Stop Slave
+     command: /usr/bin/mysql -uroot -p{{rpass}} -e "stop slave;"
+ 
+ 
+   - name: Point to Master
+     command: /usr/bin/mysql -uroot -ppassword -e "CHANGE MASTER TO MASTER_HOST='{{mhost}}', MASTER_USER='slave_user', MASTER_PASSWORD='{{spass}}', MASTER_LOG_FILE='{{result.stdout}}', MASTER_LOG_POS={{pst.stdout}};"
+
+   - name: Start Slave
+     command: /usr/bin/mysql -uroot -ppassword -e "start slave;"

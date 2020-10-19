@@ -1,0 +1,48 @@
+---
+   - include_vars: myvars.yml
+
+
+   - name: create the WHOIS database
+     mysql_db: db=whois
+            state=present
+
+   - name: Create whois User
+     mysql_user:
+      name: whois
+      password: password
+      priv: '*.*:ALL,GRANT'
+      state: present
+
+
+   - name: Create directory
+     file: path={{dir}} state=directory
+
+
+   - name: Copy Database script
+     copy: src=start.py  dest={{dir}} group=root mode='0755'
+  
+   - name: Give privileges to Slave machine 
+     shell: /usr/bin/mysql -uroot -h localhost -e  "CREATE USER 'root'@'{{ host }}' IDENTIFIED BY '{{rpass}}';"
+   
+   - name: Set Permission
+     shell: /usr/bin/mysql -uroot -h localhost -e  "GRANT ALL PRIVILEGES ON *.* TO 'root'@'{{ host }}';"
+
+   - name: Set root password
+     shell: mysqladmin -u root password "{{ rpass }}"
+
+
+   - name: Copy DB config file
+     copy:
+       src: my.cnf
+       dest:  /etc/my.cnf
+       owner: root
+       group: root
+       mode: '0644'
+     notify:
+       - restart mariadb
+  
+   - name: Create replication account
+     command: /usr/bin/mysql -uroot -p{{rpass}} -e "grant replication slave on *.* to 'slave_user'@'%' identified by '{{rpass}}';"
+   
+   - name: Flush privileges
+     command: /usr/bin/mysql -uroot -p{{rpass}} -e "flush privileges;"

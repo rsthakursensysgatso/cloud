@@ -1,0 +1,60 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: myapp
+  labels:
+    name: myapp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flaskapp
+  namespace: myapp
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: flaskapp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: myapp
+  name: flaskapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flaskapp
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        app: flaskapp
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: flaskapp
+        image: 192.168.56.107:8088/flaskapp:vbuildversion
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "100m"
+            memory: 100Mi
+          requests:
+            cpu: "100m"
+            memory: 100Mi
+      imagePullSecrets:
+          - name: regsecret

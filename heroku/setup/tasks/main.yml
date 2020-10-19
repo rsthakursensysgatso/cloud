@@ -1,0 +1,135 @@
+---
+   - include_vars: myvars.yml
+
+
+   - name: Install the Centos repo rpm
+     yum:
+       name: epel-release
+       state: present
+
+      
+#   - name: Varibale
+#     set_fact:
+#       curr: "ruby '2.2.1'"
+#       fin:  "ruby '2.0.0'"
+#       dir:  /var/heroku
+   - name: add user
+     user: name=heroku state=present groups="root"
+
+
+
+   - name: Clone ruby repositoy
+     command: git clone https://github.com/heroku/ruby-rails-sample  "{{dir}}"
+     ignore_errors: True
+
+   - name: Ansible copy file to remote server
+     copy:
+       src: files/install.sh
+       dest: "{{ dir }}"
+
+
+   - name: change permission
+     shell:  cd "{{ dir }}";chmod +x install.sh
+
+
+   - name: Install Required Packages
+     yum: state=present name={{ item }}
+     with_items:
+      - postgresql
+      - postgresql-server
+      - postgresql-contrib
+      - postgresql-devel
+      - java 
+      - nodejs
+      - ruby 
+      - rubygems
+      - ruby-devel
+      - autoconf       
+      - bison          
+      - bzip2-devel    
+      - cmake          
+      - expat-devel    
+      - flex           
+      - libcurl-devel  
+      - libtool        
+      - ncurses-devel  
+      - scons          
+      - zlib 
+      - curl
+      - git
+      - gcc
+      - python-setuptools
+      - irb
+      - zlib-devel
+      - zlib-static
+      - openssl-devel
+      - openssl
+      - python-pip
+      - python-psycopg2
+      - python-devel
+
+
+   - name: Initialize Postgresql Database
+     shell:  postgresql-setup initdb
+     ignore_errors: True
+
+   - name: Start Postgresql
+     service: name=postgresql state=started
+
+
+   - name: Create heroku  database
+     sudo_user: postgres
+     postgresql_db: name=heroku
+             encoding='UTF-8'
+             lc_collate='en_US.UTF-8'
+             lc_ctype='en_US.UTF-8'
+             template='template0'
+             state=present
+
+
+   - name: Create ruby-rails-sample_test database
+     sudo_user: postgres
+     postgresql_db: name=ruby-rails-sample_test
+             encoding='UTF-8'
+             lc_collate='en_US.UTF-8'
+             lc_ctype='en_US.UTF-8'
+             template='template0'
+             state=present
+
+
+   - name: Create ruby-rails-sample_development database
+     sudo_user: postgres
+     postgresql_db: name=ruby-rails-sample_development
+             encoding='UTF-8'
+             lc_collate='en_US.UTF-8'
+             lc_ctype='en_US.UTF-8'
+             template='template0'
+             state=present
+
+   - replace:
+       path: /var/heroku/Gemfile
+       regexp: '{{ curr }}'
+       replace: '{{ fin }}'
+
+
+   - name: Ensure user heroku has access to the database
+     sudo_user: postgres
+     postgresql_user: db=heroku
+               name=heroku
+               password=test
+               priv=ALL
+               state=present
+               role_attr_flags=CREATEDB
+
+   - name: Change permission of heroku directory
+     file: dest=/var/heroku state=directory
+           owner=heroku group=heroku
+           mode=0755
+           recurse=yes
+     sudo: yes
+
+
+   - name: Install the Gem bundler
+     command:  sudo -u heroku "{{ dir }}"/install.sh
+     register: result
+     ignore_errors: True

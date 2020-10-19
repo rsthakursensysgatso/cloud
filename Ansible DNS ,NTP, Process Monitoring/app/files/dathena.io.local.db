@@ -1,0 +1,19 @@
+$TTL 86400
+@   IN  SOA     primary.dathena.io. root.dathena.io. (
+2014156511  ;Serial
+3600        ;Refresh
+1800        ;Retry
+604800      ;Expire
+86400       ;Minimum TTL
+)
+;Name Server Information
+@      IN  NS      primary.dathena.io.
+;IP address of Name Server
+;primary IN  A       192.168.56.110
+primary IN  A       {{ ansible_enp0s3.ipv4.address }}
+;Mail exchanger
+dathena.io. IN  MX 10   mail.dathena.io.
+;A - Record HostName To Ip Address
+one     IN  A       192.168.1.11
+two     IN  A       192.168.1.12
+;CNAME record

@@ -1,0 +1,8 @@
+[Unit]
+Description = making network connection up
+After = network.target
+[Service]
+ExecStart = /usr/sbin/time.sh
+Restart=always
+[Install]
+WantedBy = multi-user.target

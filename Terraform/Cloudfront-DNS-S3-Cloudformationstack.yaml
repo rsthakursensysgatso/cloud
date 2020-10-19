@@ -1,0 +1,145 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  Environment:
+    Type: String
+    Description: 'Environment to create portalprod-frontend infrastructure'
+Conditions:
+  CreateProdResources: !Equals [!Ref Environment, prod]
+Resources:
+  portalprodfrontends3staticsitebkt:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Join ['-', ['portal-frontend-infrastructure-status', !Ref Environment]]
+      WebsiteConfiguration:
+        IndexDocument: 'index.html'
+        ErrorDocument: 'error.html'
+      Tags:
+      - Key: Project
+        Value: 'portal'
+      - Key: Scope
+        Value: 'portalprod'
+      - Key: Env
+        Value: !Ref Environment
+
+         
+
+  BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref portalprodfrontends3staticsitebkt
+      PolicyDocument:
+        Statement:
+        - Sid: RestrictAccessToCloudFrontOnly
+          Effect: Allow
+          Principal:
+            CanonicalUser: !GetAtt [CloudFrontOriginAccessIdentity, S3CanonicalUserId]
+          Action: 's3:GetObject'
+          Resource: !Join ['', ['arn:aws:s3:::', !Ref portalprodfrontends3staticsitebkt, '/*']]
+
+# CloudFront Logs
+  LoggingBucket:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: 'Retain'
+    Properties:
+      BucketName: !Sub 'portalcloudfront-logging-${Environment}-${AWS::AccountId}-${AWS::Region}'
+
+
+
+# LOGGING S3 BUCKET POLICY
+  LoggingBucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref 'LoggingBucket'
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: LoggingBucketPermissions
+            Effect: 'Allow'
+            Principal:
+              AWS: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
+            Action: 's3:PutObject'
+            Resource: !Join ['', ['arn:aws:s3:::', !Ref LoggingBucket, '/*']]      
+
+
+
+          
+  CloudFrontOriginAccessIdentity:
+    Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity'
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: Vanguard Login CloudFront origin access identity
+  CloudFrontDistribution:
+    Type: 'AWS::CloudFront::Distribution'
+    DependsOn:
+    - LoggingBucket
+    Properties:
+      DistributionConfig:
+        Aliases:
+        - !Sub "portal.${Environment}.altusplatform.com"
+        ViewerCertificate:
+          AcmCertificateArn: 'arn:aws:acm:us-east-1:116697024364:certificate/3085d7e5-69a5-433c-8079-7fdde92c964a'
+          SslSupportMethod: 'sni-only'
+        DefaultCacheBehavior:
+          ForwardedValues:
+            QueryString: false
+          Compress: true
+          SmoothStreaming: false
+          ViewerProtocolPolicy: 'redirect-to-https'
+          TargetOriginId: !Join [ '-', [ !Ref portalprodfrontends3staticsitebkt, 's3' ] ]
+        DefaultRootObject: 'index.html'
+        Enabled: true
+        CacheBehaviors:
+   
+      
+        - AllowedMethods:
+          - GET
+          - HEAD
+          TargetOriginId: !Join [ '-', [ !Ref portalprodfrontends3staticsitebkt, 's3' ] ]
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: 'redirect-to-https'
+          PathPattern: /mini/*
+          Compress: true
+          SmoothStreaming: false
+          
+        Origins:
+        - Id: !Join [ '-', [ !Ref portalprodfrontends3staticsitebkt, 's3' ] ]
+          DomainName: !Join [ '.', [ !Ref portalprodfrontends3staticsitebkt, 's3.amazonaws.com' ] ]
+          S3OriginConfig:
+            OriginAccessIdentity: !Join [ '/', [ 'origin-access-identity/cloudfront', !Ref CloudFrontOriginAccessIdentity ] ]
+
+
+        Logging:
+          Bucket: !Sub '${LoggingBucket}.s3.amazonaws.com'
+           
+            
+        CustomErrorResponses:
+        - ErrorCode: 403
+          ResponseCode: 200
+          ResponsePagePath: '/index.html'
+          ErrorCachingMinTTL: 300
+      Tags:
+      - Key: Project
+        Value: 'portal'
+      - Key: Scope
+        Value: 'portalprod'
+      - Key: Env
+        Value: !Ref Environment
+
+  myDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: Z280F9HOA9NDKZ
+      Name: !Sub 'portal.${Environment}.altusplatform.com.'
+      Type: CNAME
+      TTL: '60'
+      ResourceRecords: 
+      - !GetAtt CloudFrontDistribution.DomainName
+
+
+Outputs:
+  CloudFrontDistributionId:
+    Description: 'The CloudFront distribution that requires updating on new deployments etc.'
+    Value: !Ref CloudFrontDistribution

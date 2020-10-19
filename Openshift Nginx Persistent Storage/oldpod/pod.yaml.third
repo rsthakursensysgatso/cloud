@@ -1,0 +1,20 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: mypod
+  labels:
+    name: mypod
+spec:
+  containers:
+    - name: mypod
+      image: rsthakur83/tutum-hello
+      ports:
+        - containerPort: 80
+#          name: "http-server"
+#      volumeMounts:
+#      - mountPath: "/var/tmp"
+#        name: mypod
+#  volumes:
+#    - name: mypod
+#      persistentVolumeClaim:
+#       claimName: myclaim-1

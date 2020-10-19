@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: kibana
+  namespace: newapp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - name: kibana
+        image: rsthakur83/kibana:6
+        ports:
+        - containerPort: 5601
+        volumeMounts:
+            - mountPath: /usr/share/kibana/config
+              name: kibana-configmap
+      volumes:
+       - name: kibana-configmap
+         configMap:
+            name: kibana-configmap
+            items:
+             - key: config
+               path: kibana.yml

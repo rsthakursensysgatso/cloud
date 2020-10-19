@@ -1,0 +1,37 @@
+#!/bin/bash
+
+
+{% if iptables_flush_all %}
+iptables -F
+iptables -X
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+{% endif %}
+
+iptables -A INPUT -i lo -j ACCEPT
+
+# Allowed ports.
+{% for port in iptables_allowed_tcp_ports %}
+iptables -A INPUT -p tcp -m tcp --dport {{port}} -j ACCEPT
+{% endfor %}
+
+# Accept icmp ping requests.
+iptables -A INPUT -p icmp -j ACCEPT
+
+# Allow NTP traffic for time synchronization.
+iptables -A OUTPUT -p udp --dport 123 -j ACCEPT
+iptables -A INPUT -p udp --sport 123 -j ACCEPT
+
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+{% if iptables_logging %}
+# Logging
+iptables -A INPUT -m limit --limit 15/minute -j LOG --log-level 7 --log-prefix "Dropped by iptables: "
+{% endif %}
+
+{% if iptables_deny_all %}
+# Drop all other
+iptables -A INPUT -j DROP
+{% endif %}

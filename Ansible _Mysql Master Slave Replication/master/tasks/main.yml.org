@@ -1,0 +1,63 @@
+---
+#  user: vagrant
+   - include_vars: myvars.yml
+
+   - vars: 
+       dir: /root/whois        
+
+   - name: create the WHOIS database
+     mysql_db: db=whois
+            state=present
+#     ignore_errors: True
+
+   - name: Create whois User
+     mysql_user:
+      name: whois
+      password: password
+      priv: '*.*:ALL,GRANT'
+      state: present
+     ignore_errors: True
+
+
+   - name: Create directory
+     file: path= state=directory
+
+
+   - name: Copy Database script
+     copy:
+      src: start.py
+      dest:  /root/whois
+      owner: root
+      group: root
+      mode: '0755'
+  
+   - name: Give privileges to Slave machine 
+     shell: /usr/bin/mysql -uroot -h localhost -e  "CREATE USER 'root'@'192.168.56.104' IDENTIFIED BY 'password';"
+     ignore_errors: True
+   
+   - name: Set Permission
+     shell: /usr/bin/mysql -uroot -h localhost -e  "GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.56.104';"
+     ignore_errors: True
+
+   - name: Set root password
+     shell: mysqladmin -u root password password
+     ignore_errors: True
+
+
+   - name: Copy DB config file
+     copy:
+       src: my.cnf
+       dest:  /etc/my.cnf
+       owner: root
+       group: root
+       mode: '0644'
+     notify:
+       - restart mariadb
+  
+   - name: Create replication account
+     command: /usr/bin/mysql -uroot -ppassword -e "grant replication slave on *.* to 'slave_user'@'%' identified by 'globopassword';"
+     ignore_errors: True
+   
+   - name: Flush privileges
+     command: /usr/bin/mysql -uroot -ppassword -e "flush privileges;"
+     ignore_errors: True

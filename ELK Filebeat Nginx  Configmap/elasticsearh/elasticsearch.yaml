@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: elasticsearch
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+      - name: elasticsearch
+        image:  docker.elastic.co/elasticsearch/elasticsearch:6.0.1
+        resources:
+          requests:
+            memory: "2228Mi"
+            cpu: "500m"
+#          limits:
+#            memory: "128Mi"
+#            cpu: "200m"
+        ports:
+        - containerPort: 9200
+      volumeMounts:
+#      - mountPath: "/usr/share/nginx/html"
+      - mountPath: "/mnt"
+        name: elasticsearch
+  volumes:
+    - name: elasticsearch
+      persistentVolumeClaim:
+       claimName: myclaim-2
+

@@ -1,0 +1,77 @@
+---
+
+   - user:
+      name: myapp
+      shell: /bin/bash
+  
+
+   - name: Install Application Dependency
+     yum: state=present name={{ item }}
+     with_items:
+      - python 
+      - python-pip
+      - supervisor
+
+ 
+
+   - git:
+      repo: git://github.com/KMK-ONLINE/devops-coding-challenge
+      dest: /webapps/myapp
+      accept_hostkey: yes
+      force: yes
+      recursive: no
+
+   - name: Install Requirements
+     action: pip  requirements=/webapps/myapp/requirements.txt
+
+ 
+   - copy: 
+      src: /root/vagrant/myapp/private/ansible/finalapp/app/files/supervisord.conf
+      dest: /etc/supervisord.conf
+      owner: root
+      group: root
+      mode: '0644'
+      backup: yes
+     notify:
+        - restart supervisord
+
+   - name: Start Supervisor
+     service: name=supervisord state=restarted
+
+   - name: Install Apache
+     yum: name=httpd state=installed
+
+
+   - copy:
+      src: /root/vagrant/myapp/private/ansible/finalapp/app/files/httpd.conf
+      dest: /etc/httpd/conf/
+      owner: root
+      group: root
+      mode: '0644'
+ 
+   - name: Start Apache
+     service: name=httpd state=started
+
+   - copy:
+      src: /root/vagrant/myapp/private/ansible/finalapp/app/files/logrotate.conf
+      dest: /etc/logrotate.d/httpd
+      owner: root
+      group: root
+      mode: '0644'
+
+   - name: Reload Logrotate configuration
+     command:  logrotate -f /etc/logrotate.conf
+
+
+   ########## TeSTING OF APP #############
+   - wait_for:
+      port: 5000
+      delay: 10
+
+   - name: port status
+     shell:   netstat -ntpl |grep 5000
+     register: port_stat
+
+   - name: App Port Check
+     shell: echo "App Listening on 5000"
+     when:  '"5000"  in port_stat.stdout'

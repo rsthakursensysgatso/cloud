@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+
+    environment{
+        
+        NEXUS_URL  = "192.168.56.107:8088"
+	IMAGE_URL_WITH_TAG= "${NEXUS_URL}/flaskapp:v${BUILD_NUMBER}"
+	EMAIL_TO = 'rsthakur83@gmail.com'
+    }
+    stages{
+        stage('Build Docker Image'){
+            steps{
+		sh "cd pipelineflaskapp"
+                sh "docker build  -t ${IMAGE_URL_WITH_TAG} --file ./pipelineflaskapp/Dockerfile ."
+            }
+        }
+
+	stage('Scan Image') {
+		
+		steps {
+	    aquaMicroscanner imageName: "${IMAGE_URL_WITH_TAG}", notCompliesCmd: '', onDisallowed: 'ignore', outputFormat: 'html'
+	    }
+	}	    
+        stage('Docker Image Push'){
+            steps{
+		    
+                withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerpwd')]) {
+			sh "docker login -u admin -p ${dockerpwd} http://${NEXUS_URL}"
+                        sh "docker push ${IMAGE_URL_WITH_TAG}"
+                }
+            }
+        }
+
+        stage ('Wait for approval'){
+		steps {
+                input 'Approve deployment?'
+            }
+	}
+	    
+	    stage('Deploy Nginx App') {
+	    
+		    steps {
+		    
+		    sshagent(['8e9cc002-f19dewiydtwe765-ecec834']) {
+			sh "sed -i  's/buildversion/${BUILD_NUMBER}/g' pipelineflaskapp/myapp/flaskapp.yaml"
+			sh "scp -o StrictHostKeyChecking=no -r pipelineflaskapp/myapp pipelineflaskapp/deploy.sh kube@192.168.56.107:/home/kube"
+			sh "ssh -o StrictHostKeyChecking=no   kube@192.168.56.107  chmod +x /home/kube/deploy.sh"
+			sh "ssh -o StrictHostKeyChecking=no   kube@192.168.56.107  /home/kube/deploy.sh"
+			}
+		    }
+	    }
+    }   
+  post {
+    success {
+		sh "echo Build SUCCESSFUL"
+               emailext body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n ----------- \n${BUILD_LOG, maxLines=100, escapeHtml=false}', 
+                    to: "rsthakur83@gmail.com", 
+                    subject: 'Deployment Build SUCCESSFUL : $PROJECT_NAME - #$BUILD_NUMBER'	    
+   }
+
+    failure {
+	    sh "echo Build FAILED"
+               emailext body: 'Check console output at $BUILD_URL to view the results. \n\n ${CHANGES} \n\n ----------- \n${BUILD_LOG, maxLines=100, escapeHtml=false}', 
+                    to: "rsthakur83@gmail.com", 
+                    subject: 'Deployment Build FAILED : $PROJECT_NAME - #$BUILD_NUMBER'	    
+    }
+}
+	
+}

@@ -1,0 +1,114 @@
+---
+   - include_vars: myvars.yml
+  
+   - name: updates a server
+     apt: update_cache=yes
+  
+
+   - name: Install Other Tools
+     apt: state=present name={{ item }}
+     with_items:
+      - python
+      - supervisor
+      - sysstat
+      - net-tools
+      - dnsutils 
+      - telnet 
+      - strace 
+      - tcpdump
+      - iotop
+      - iftop
+      - unattended-upgrades
+
+   - name: Security update
+     command:  sudo unattended-upgrades
+
+
+   - name: Install OSRM Dependencies
+     apt: state=present name={{ item }}
+     with_items:
+      - build-essential
+      - git 
+      - cmake 
+      - pkg-config
+      - libbz2-dev 
+      - libstxxl-dev
+      - libstxxl1v5
+      - libxml2-dev
+      - libzip-dev
+      - libboost-all-dev 
+      - lua5.2 
+      - liblua5.2-dev 
+      - libtbb-dev
+
+   - git:
+      repo: git://github.com/Project-OSRM/osrm-backend
+      dest: "{{ dir  }}"
+      accept_hostkey: yes
+      force: yes
+      recursive: no
+
+   - copy:
+      src: build.sh      
+      dest:  "{{ dir  }}"
+      owner: root
+      group: root
+      mode: '0755'
+
+
+   - name: Build the Osrm App
+     command: ./build.sh
+     args:
+       chdir: "{{ dir  }}"
+
+   - name: Download OSRM APP
+     get_url:
+      url: http://download.geofabrik.de/europe/germany/berlin-latest.osm.pbf
+      dest: "{{ dir  }}"
+
+
+   - copy:
+      src: start.sh
+      dest:  "{{ dir  }}"
+      owner: root
+      group: root
+      mode: '0755'
+
+
+  
+ ####### Extract Preprocess ##########
+   - name: Start the Osrm App
+     command: ./start.sh
+     args:
+       chdir: "{{ dir  }}"
+
+
+          
+
+   - copy:
+       src: supervisord.conf
+       dest: /etc/supervisor/supervisord.conf
+       owner: root
+       group: root
+       mode: '0644'
+       backup: yes
+     notify:
+        - restart supervisor
+
+   - name: Start Supervisor
+     service: name=supervisor state=started
+
+
+
+   ########## TeSTING OF APP #############
+   - wait_for:
+       port: 5000
+       delay: 10
+
+   - name: port status
+     shell: netstat -ntpl |grep 5000
+     register: port_stat
+
+   - name: App Port Check
+     shell: echo "App Listening on 5000"
+     when: '"5000"  in port_stat.stdout'

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: filebeat
+  namespace: newapp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: filebeat
+    spec:
+      containers:
+      - name: filebeat
+        image: rsthakur83/filebeat:v8
+
+
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/log/filebeat
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+

@@ -1,0 +1,59 @@
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v2beta1
+metadata:
+   name: mynginx-request
+   namespace: myapp
+spec:
+    scaleTargetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: mynginx
+    minReplicas: 2
+    maxReplicas: 10
+    metrics:
+    - type: Object
+    object:
+        target:
+        kind: Service
+        name: mynginx
+        metricName: http_request
+        targetValue: 100
+
+
+
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v2beta1
+metadata:
+  name: mynginx-memory
+  namespace: myapp
+spec:
+  maxReplicas: 10
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mynginx
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageValue: 500M
+
+---
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v2beta1
+metadata:
+  name: mynginx-cpu
+  namespace: myapp
+spec:
+  maxReplicas: 10
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mynginx
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 80

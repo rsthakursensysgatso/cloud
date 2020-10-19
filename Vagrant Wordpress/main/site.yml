@@ -1,0 +1,15 @@
+---
+- name: deploy MySQL and configure the databases
+  hosts: db
+  become: true
+  become_user: root
+  roles:
+    - db
+
+
+- name: configure and deploy the webservers and application code
+  hosts: wordpress
+  become: true
+  become_user: root
+  roles:
+    - wordpress
