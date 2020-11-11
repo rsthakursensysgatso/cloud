@@ -1,0 +1,8 @@
+#!/bin/bash
+instanceid=`aws ec2 describe-instances --filters 'Name=tag:Name,Values=QA env1 AEV'   --output text --query 'Reservations[*].Instances[*].InstanceId'`
+
+echo $instanceid
+
+
+
+aws ssm send-command --document-name "AWS-RunPowerShellScript" --parameters commands=["C:\\Users\\Administrator\\Desktop\\S3-DM-Update.ps1"] --targets "Key=instanceids,Values=$instanceid"
