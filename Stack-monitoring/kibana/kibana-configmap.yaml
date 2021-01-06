@@ -4,7 +4,6 @@ metadata:
   name: kibana-configmap
   labels:
     name: kibana-configmap
-  namespace: newapp
 data:
   config: |-
     server.host: '0.0.0.0'
