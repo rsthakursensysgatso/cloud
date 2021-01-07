@@ -1,0 +1,29 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: user-data-pv-volume
+  namespace: xilium  
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/ftp-user-data"
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ftp-conf-pv-volume
+  namespace: xilium  
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/ftp-conf"

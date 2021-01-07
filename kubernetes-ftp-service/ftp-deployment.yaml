@@ -1,0 +1,136 @@
+
+apiVersion: apps/v1 # for versions before 1.6.0 use extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ftp
+  namespace: xilium
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ftp
+  template:
+    metadata:
+      labels:
+        app: ftp
+    spec:
+      volumes:
+      - name: task-pv-storage
+        persistentVolumeClaim:
+          claimName: task-pv-claim
+      containers:
+      - name: ftp-container
+        image: us.gcr.io/xilium-1330/coloumbia-vsftpd-server:v1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 2169
+          protocol: TCP
+          name: "ftp-server"
+        - containerPort: 21101
+          protocol: TCP
+          name: "ftp-pasv1"
+        - containerPort: 21102
+          protocol: TCP
+          name: "ftp-pasv2"
+        - containerPort: 21103
+          protocol: TCP
+          name: "ftp-pasv3"
+        - containerPort: 21104
+          protocol: TCP
+          name: "ftp-pasv4"
+        - containerPort: 21105
+          protocol: TCP
+          name: "ftp-pasv5"
+        - containerPort: 21106
+          protocol: TCP
+          name: "ftp-pasv6"
+        - containerPort: 21107
+          protocol: TCP
+          name: "ftp-pasv7"
+        - containerPort: 21108
+          protocol: TCP
+          name: "ftp-pasv8"
+        - containerPort: 21109
+          protocol: TCP
+          name: "ftp-pasv9"
+        - containerPort: 21110
+          protocol: TCP
+          name: "ftp-pasv10"
+        - containerPort: 21111
+          protocol: TCP
+          name: "ftp-pasv11"
+        - containerPort: 21112
+          protocol: TCP
+          name: "ftp-pasv12"
+        - containerPort: 21113
+          protocol: TCP
+          name: "ftp-pasv13"
+        - containerPort: 21114
+          protocol: TCP
+          name: "ftp-pasv14"
+        - containerPort: 21115
+          protocol: TCP
+          name: "ftp-pasv15"
+        - containerPort: 21116
+          protocol: TCP
+          name: "ftp-pasv16"
+        - containerPort: 21117
+          protocol: TCP
+          name: "ftp-pasv17"
+        - containerPort: 21118
+          protocol: TCP
+          name: "ftp-pasv18"
+        - containerPort: 21119
+          protocol: TCP
+          name: "ftp-pasv19"
+        - containerPort: 21120
+          protocol: TCP
+          name: "ftp-pasv20"
+        env:
+        - name: FTP_USER
+          value: ""
+        - name: FTP_PASS
+          value: ""
+        - name: PASV_ADDRESS
+          value: "192.168.10.37"
+        - name: PASV_MIN_PORT
+          value: "21101"
+        - name: PASV_MAX_PORT
+          value: "21120"
+        - name: PASV_ENABLE
+          value: "YES"
+        - name: PASV_ADDR_RESOLVE
+          value: "YES"
+        - name: PASV_PROMISCUOUS
+          value: "YES"
+        - name: SSL_ENABLE
+          value: "NO"
+        - name: SSL_CERT
+          value: "/ftp-ssl-cert/vsftpd.pem"
+        - name: SSL_PRIVATE_KEY
+          value: "/ftp-ssl-cert/vsftpd.pem"
+        - name: SSL_CIPHER
+          value: "HIGH"
+        - name: SSL_TLSv1
+          value: "YES"
+        - name: SSL_SSLv2
+          value: "NO"
+        - name: SSL_SSLv3
+          value: "NO"
+        - name: FORCE_LOCAL_DATA_SSL
+          value: "NO"  
+        - name: FORCE_LOCAL_LOGIN_SSL
+          value: "NO"
+        volumeMounts:
+        - mountPath: "/home/vsftpd"
+          name: data-pv-storage
+        - mountPath: "/ftpusers"
+          name: conf-pv-storage
+      volumes:
+        - name: data-pv-storage
+          persistentVolumeClaim:
+            claimName: user-data-pvc
+        - name: conf-pv-storage
+          persistentVolumeClaim:
+            claimName: conf-data-pvc
+

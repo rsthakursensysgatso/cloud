@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ftp
+  namespace: xilium  
+  labels:
+    app: ftp
+spec:
+  ports:
+  - name: "ftp-server"
+    port: 2121
+    protocol: TCP
+    targetPort: 2169
+  - name: "passv1"
+    port: 21101
+    protocol: TCP
+    targetPort: 21101
+  - name: "passv2"
+    port: 21102
+    protocol: TCP
+    targetPort: 21102
+  - name: "passv3"
+    port: 21103
+    protocol: TCP
+    targetPort: 21103
+  - name: "passv4"
+    port: 21104
+    protocol: TCP
+    targetPort: 21104
+  - name: "passv5"
+    port: 21105
+    protocol: TCP
+    targetPort: 21105
+  - name: "passv6"
+    port: 21106
+    protocol: TCP
+    targetPort: 21106
+  - name: "passv7"
+    port: 21107
+    protocol: TCP
+    targetPort: 21107
+  - name: "passv8"
+    port: 21108
+    protocol: TCP
+    targetPort: 21108
+  - name: "passv9"
+    port: 21109
+    protocol: TCP
+    targetPort: 21109
+  - name: "passv10"
+    port: 21100
+    protocol: TCP
+    targetPort: 21100
+  - name: "passv11"
+    port: 21111
+    protocol: TCP
+    targetPort: 21111
+  - name: "passv12"
+    port: 21112
+    protocol: TCP
+    targetPort: 21112
+  - name: "passv13"
+    port: 21113
+    protocol: TCP
+    targetPort: 21113
+  - name: "passv14"
+    port: 21114
+    protocol: TCP
+    targetPort: 21114
+  - name: "passv15"
+    port: 21115
+    protocol: TCP
+    targetPort: 21115
+  - name: "passv16"
+    port: 21116
+    protocol: TCP
+    targetPort: 21116
+  - name: "passv17"
+    port: 21117
+    protocol: TCP
+    targetPort: 21117
+  - name: "passv18"
+    port: 21118
+    protocol: TCP
+    targetPort: 21118
+  - name: "passv19"
+    port: 21119
+    protocol: TCP
+    targetPort: 21119
+  - name: "passv20"
+    port: 21120
+    protocol: TCP
+    targetPort: 21120
+  selector:
+    app: ftp
+  sessionAffinity: None
+  type: LoadBalancer
+  loadBalancerIP: 192.168.10.37
