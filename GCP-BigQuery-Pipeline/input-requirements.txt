@@ -1,0 +1,8 @@
+google==3.0.0
+google-api-core==1.25.1
+google-cloud==0.34.0
+grpc-google-iam-v1==0.12.3
+google-api-python-client==2.0.2
+google-cloud-pubsub==2.4.0
+google-cloud-core==1.6.0
+

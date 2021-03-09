@@ -1,0 +1,32 @@
+import base64
+import ast
+import json
+my_dict = {}
+from google.cloud import bigquery
+def hello_pubsub(event, context):
+    """Triggered from a message on a Cloud Pub/Sub topic.
+    Args:
+         event (dict): Event payload.
+         context (google.cloud.functions.Context): Metadata for the event.
+    """
+    import json
+    pubsub_message = base64.b64decode(event['data']).decode('utf-8')
+    print(pubsub_message)
+    print(base64.b64decode(pubsub_message))
+    x = base64.b64decode(pubsub_message)
+    dict_str = x.decode("UTF-8")
+    mydata = ast.literal_eval(dict_str)
+    print(mydata)
+    print(type(mydata))
+    my_dict.update({'prod_id': mydata.get('prod_id'), 'prod_name': mydata.get('prod_name')})
+    print(my_dict)
+    bigquery_client = bigquery.Client()
+    dataset_ref = bigquery_client.dataset('ravi_demo')
+    table_ref = dataset_ref.table('demoo')
+    table = bigquery_client.get_table(table_ref)
+    rows_to_insert = [my_dict]
+    errors = bigquery_client.insert_rows(table, rows_to_insert)
+    result=json.dumps(my_dict)
+    print(result)
+    #my_dict.update({'prod_id': x['prod_id'], 'prod_name': x['prod_name']})
+    return result

@@ -1,0 +1,21 @@
+import sys
+#sys.path.append('/user_code')
+import base64
+import ast
+import json
+my_dict = {}
+
+from  google.cloud import  pubsub_v1
+
+def hello_pubsub(event, context):
+    import json
+    project_id = "traas-sapol-sandpit"
+    topic_id = "output"
+    
+    publisher = pubsub_v1.PublisherClient()
+    topic_path = "projects/traas-sapol-sandpit/topics/output"
+    topic_path = publisher.topic_path(project_id, topic_id)
+    future = publisher.publish(topic_path, (event['data']).encode("utf-8"))
+    pubsub_message = base64.b64decode(event['data']).decode('utf-8')
+    print(type(pubsub_message))
+    print(pubsub_message)
